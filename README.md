@@ -9,6 +9,8 @@ plugin through the Google Developer API.
 2. Put the google-webfonts-for-canvas directory and all its contents into the archive google-webfonts-for-canvas.zip
 3. Install the zip file into WordPres as a plugin in the normal way.
 
+The "releases" directory holds released zip files for convenience.
+
 # Notes
 
 You will need a Google Developer API Key to get access to the list of fonts that Google supplies. The plugin
