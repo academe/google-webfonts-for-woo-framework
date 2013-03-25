@@ -1,0 +1,290 @@
+<?php
+/**
+ * @package Google Webfonts For Canvas
+ */
+/*
+Plugin Name: Google Webfonts For Canvas
+Plugin URI: http://www.academe.co.uk/
+Description: Adds all missing Google webfonts to the WooThemes Canvas theme. It may work on other themes too.
+Version: 0.9.0
+Author: Jason Judge
+Author URI: http://www.academe.co.uk/
+License: GPLv2 or later
+*/
+
+/*
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+
+/**
+ * Set default settings on installation.
+ */
+
+register_activation_hook(__FILE__, function() {
+    $google_api_key = get_option('google_api_key');
+    if ($google_api_key === false) {
+        add_option('google_api_key', '', false, true);
+    }
+});
+
+// Set the main plugin as a global object.
+$GWFC_OBJ = new GoogleWebfontsForCanvas();
+$GWFC_OBJ->init();
+
+class GoogleWebfontsForCanvas
+{
+    // The name of the cahce for the the fonts.
+    public $trans_cache_name = 'google_webfonts_for_canvas_cache';
+
+    // The time the fonts are cached for, before we fetch a new batch from Google.
+    // TODO: make the time configurable, which would include "indefinite".
+    public $cache_time = 43200; // 60*60*12
+
+    // Initilialise the plugin.
+    public function init() {
+        //$fonts = $this->getGoogleFontsCached(); var_dump($fonts);
+
+        // Add the missing fonts in the admin page.
+        add_action('admin_head', array($this, 'action_admin_head'), 20);
+
+        // Add the missing fonts to the non-admin pages too.
+        // It needs to be an early action (5) to get in before the Canvas hook
+        // that uses the font list.
+        add_action('wp_head', array($this, 'action_admin_head'), 5);
+
+        if (is_admin()) {
+            // Add the admin menu.
+            add_action('admin_menu', array($this, 'admin_menu'));
+
+            // Register the settings.
+            add_action('admin_init', array($this, 'register_settings'));
+        }
+    }
+
+    public function admin_menu()
+    {
+        // And "options_page" will go under the settings menu as a sub-menu.
+        add_options_page(
+            'Google Webfonts for Canvas Options',
+            'Google Webfonts for Canvas',
+            'manage_options',
+            'gw-for-canvas',
+            array($this, 'plugin_options')
+        );
+    }
+
+    public function plugin_options()
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die(__('You do not have sufficient permissions to access this page.'));
+        }
+
+        echo '<div class="wrap">';
+        screen_icon();
+        echo '<h2>Google Webfonts for Canvas Options</h2>';
+
+        echo '<form method="post" action="options.php">';
+
+        settings_fields('gwfc-group');
+        do_settings_sections('gwfc_main_section');
+
+        echo '<table class="form-table">';
+
+        echo '</table>';
+
+        submit_button();
+        echo '</form>';
+
+        echo '</div>';
+    }
+
+    public function register_settings()
+    {
+        // Register the settings.
+
+        register_setting(
+            'gwfc-group', 
+            'google_api_key',
+            array($this, 'google_api_key_validate')
+        );
+
+        // Register a section in the page.
+
+        add_settings_section(
+            'gwfc_main', 
+            'Main Settings', 
+            array($this, 'plugin_main_section_text'),
+            'gwfc_main_section'
+        );
+
+        // Add fields to the section.
+
+        add_settings_field(
+            'google_api_key',
+            'Google Developer API Key',
+            array($this, 'google_api_key_field'),
+            'gwfc_main_section',
+            'gwfc_main'
+        );
+    }
+
+    // Summary text/introduction to the main section.
+
+    public function plugin_main_section_text()
+    {
+        echo '<p>Google Webfonts for WooThemes Canvas theme.</p>';
+    }
+
+    // Display the input fields.
+
+    public function google_api_key_field() {
+        $option = get_option('google_api_key', '');
+        echo "<input id='google_api_key' name='google_api_key' size='80' type='text' value='{$option}' />";
+    }
+
+    // Validate the submitted fields.
+
+    public function google_api_key_validate($input) {
+        // Make sure it is a URL-safe string.
+        if ($input != rawurlencode($input)) {
+            add_settings_error('google_api_key', 'texterror', 'API key contains invalid characters', 'error');
+        } else {
+            // If valid, then discard the current fonts cache, so a fresh fetch is
+            // done with the new key.
+            delete_transient($this->trans_cache_name);
+        }
+
+        return $input;
+    }
+
+
+    /**
+     * In the admin section, insert any missing Google fonts.
+     */
+
+    public function action_admin_head()
+    {
+        global $google_fonts;
+
+        // If there is no global google fonts list, bail out.
+        if (empty($google_fonts) || !is_array($google_fonts)) return;
+
+        // Get the full list of Google fonts available.
+        $all_fonts = $this->getGoogleFontsCached();
+        if (!$all_fonts) return;
+
+        // Make a list of font families we have in the list already.
+        $families = array();
+        foreach($google_fonts as $font) {
+            $families[$font['name']] = true;
+        }
+
+        // Now we have a list to check against, we can insert the fonts that
+        // are missing. Canvas will deal with sorting this list later, so we
+        // just tag them on the end.
+        foreach($all_fonts as $font) {
+            if (isset($families[$font['name']])) continue;
+
+            $google_fonts[] = $font;
+        }
+    }
+
+    /**
+     * Get the full list of fonts from Google, formated for Canvas and
+     * cached.
+     */
+
+    public function getGoogleFontsCached()
+    {
+        // Transient caching.
+        if (false === ($fonts = get_transient($this->trans_cache_name))) {
+            $fonts = $this->getGoogleFonts();
+            if (!empty($fonts)) set_transient($this->trans_cache_name, $fonts, $this->cache_time);
+        }
+
+        return $fonts;
+    }
+
+    /**
+     * Get the full list of fonts from Google.
+     */
+
+    public function getGoogleFonts()
+    {
+        $google_api_key = get_option('google_api_key', '');
+        $api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=';
+        $font_list = false;
+
+        // If not API key is set yet, then abort.
+        if (empty($google_api_key)) return $font_list;
+
+        // The API key should be URL-safe.
+        // We need to ensure it is when setting it in the admin page.
+        $api_data = wp_remote_get($api_url . $google_api_key);
+
+        $response = $api_data['response'];
+
+        if (200 === $response['code']) {
+            $font_list = json_decode($api_data['body'], true);
+        }
+
+        // Now we should have $font_list.
+        // If it is valid, then save it in a more permanent cache after some processing.
+        // Canvas needs entries like this:
+        //    array( 'name' => "Caudex", 'variant' => ':r,b,i,bi')
+        // while Google provides a very different syntax, using a mix of font weights (instead
+        // of bold/regular/etc) and names (italic/regular/etc).
+        // It is not yet clear just how Canvas uses these variants beyond just passing them to Google.
+        // e.g. These provided by Google API: "regular", "italic", "900", "900italic"
+        // need to be translated into this: ":400,900italic,900,400italic" so it can
+        // be used on the web page. I think Canvas does actually *use* these variants,
+        // which it could in the admin interface, but it just blindly passes them to
+        // Google to ask for all variants to be passed back to the web browser, which TBH
+        // is inneficient, as it is requresting variants that may never be used.
+        // https://developers.google.com/webfonts/docs/getting_started
+        // According to the Google docs, we can specify the full names, abbreviations
+        // or the weights - all are equivalent.
+
+        // If we don't have an array of fonts, bail out now.
+        if (empty($font_list) || !is_array($font_list)) return $font_list;
+
+        // We want to go through the list and abbreviate it.
+        // Some of the variant names are abreviated. We could go further, with the weights.
+        // For example, 700 == bold == b == 7
+        $fonts = array();
+        foreach($font_list['items'] as $font) {
+            if (!empty($font['variants'])) {
+                $variants = preg_replace(
+                    array('/^regular$/', '/italic/', '/bold/', '/^700$/', '/^700i$/'),
+                    array('r', 'i', 'b', 'b', 'bi'),
+                    $font['variants']
+                );
+                // Canvas expects the leading ":" to be included in the variant list. It does
+                // not insert it at the point of use.
+                $variant = ':' . implode(',', $variants);
+            } else {
+                $variant = '';
+            }
+
+            $fonts[] = array(
+                'name' => $font['family'],
+                'variant' => $variant,
+            );
+        }
+
+        return $fonts;
+    }
+}
+
