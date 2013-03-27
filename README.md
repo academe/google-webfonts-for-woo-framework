@@ -16,3 +16,11 @@ The "releases" directory holds released zip files for convenience.
 You will need a Google Developer API Key to get access to the list of fonts that Google supplies. The plugin
 has a settings page that allows you to enter the API key. The plugin will refresh its list of fonts every
 twelve hours at present, so there will be up to two hits on the Google API each day.
+
+The Google Developer API Key can be obtained here:
+
+http://code.garyjones.co.uk/google-developer-api-key
+
+Some simple steps for obtaining the key are shown here:
+
+http://code.garyjones.co.uk/google-developer-api-key
