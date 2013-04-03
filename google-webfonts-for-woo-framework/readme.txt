@@ -1,5 +1,5 @@
 The purpose of this plugin is to make all available Google webfonts available to 
-the WooThemes Canvas theme.
+the WooThemes Canvas theme, and any other themes that use the WooThemes framework.
 
 Contact:
 
@@ -7,7 +7,7 @@ Jason Judge <jason.judge@academe.co.uk>
 
 Project page:
 
-https://github.com/academe/google-webfonts-for-canvas/
+https://github.com/academe/google-webfonts-for-woo-framework/
 
 It works like this:
 

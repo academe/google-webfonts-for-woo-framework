@@ -1,12 +1,12 @@
 <?php
 /**
- * @package Google Webfonts For Canvas
+ * @package Google Webfonts For Wootheme Framework
  */
 /*
-Plugin Name: Google Webfonts For Canvas
-Plugin URI: http://www.academe.co.uk/
-Description: Adds all missing Google webfonts to the WooThemes Canvas theme. It may work on other themes too.
-Version: 0.9.0
+Plugin Name: Google Webfonts For Woo Framework
+Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
+Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
+Version: 0.9.5
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -40,13 +40,13 @@ register_activation_hook(__FILE__, function() {
 });
 
 // Set the main plugin as a global object.
-$GWFC_OBJ = new GoogleWebfontsForCanvas();
+$GWFC_OBJ = new GoogleWebfontsForWooFramework();
 $GWFC_OBJ->init();
 
-class GoogleWebfontsForCanvas
+class GoogleWebfontsForWooFramework
 {
     // The name of the cahce for the the fonts.
-    public $trans_cache_name = 'google_webfonts_for_canvas_cache';
+    public $trans_cache_name = 'google_webfonts_for_woo_framework_cache';
 
     // The time the fonts are cached for, before we fetch a new batch from Google.
     // TODO: make the time configurable, which would include "indefinite".
@@ -60,7 +60,7 @@ class GoogleWebfontsForCanvas
         add_action('admin_head', array($this, 'action_admin_head'), 20);
 
         // Add the missing fonts to the non-admin pages too.
-        // It needs to be an early action (5) to get in before the Canvas hook
+        // It needs to be an early action (5) to get in before the theme hook
         // that uses the font list.
         add_action('wp_head', array($this, 'action_admin_head'), 5);
 
@@ -77,10 +77,10 @@ class GoogleWebfontsForCanvas
     {
         // And "options_page" will go under the settings menu as a sub-menu.
         add_options_page(
-            'Google Webfonts for Canvas Options',
-            'Google Webfonts for Canvas',
+            'Google Webfonts for Woo Framework Options',
+            'Google Webfonts for Woo Framework',
             'manage_options',
-            'gw-for-canvas',
+            'gw-for-wooframework',
             array($this, 'plugin_options')
         );
     }
@@ -93,7 +93,7 @@ class GoogleWebfontsForCanvas
 
         echo '<div class="wrap">';
         screen_icon();
-        echo '<h2>Google Webfonts for Canvas Options</h2>';
+        echo '<h2>Google Webfonts for Woo Framework Options</h2>';
 
         echo '<form method="post" action="options.php">';
 
@@ -144,7 +144,7 @@ class GoogleWebfontsForCanvas
 
     public function plugin_main_section_text()
     {
-        echo '<p>Google Webfonts for WooThemes Canvas theme.</p>';
+        echo '<p>Google Webfonts for WooThemes Woo Framework.</p>';
     }
 
     // Display the input fields.
@@ -192,7 +192,7 @@ class GoogleWebfontsForCanvas
         }
 
         // Now we have a list to check against, we can insert the fonts that
-        // are missing. Canvas will deal with sorting this list later, so we
+        // are missing. The Woo Framework will deal with sorting this list later, so we
         // just tag them on the end.
         foreach($all_fonts as $font) {
             if (isset($families[$font['name']])) continue;
@@ -202,7 +202,7 @@ class GoogleWebfontsForCanvas
     }
 
     /**
-     * Get the full list of fonts from Google, formated for Canvas and
+     * Get the full list of fonts from Google, formated for Woo Framework and
      * cached.
      */
 
@@ -242,14 +242,14 @@ class GoogleWebfontsForCanvas
 
         // Now we should have $font_list.
         // If it is valid, then save it in a more permanent cache after some processing.
-        // Canvas needs entries like this:
+        // Woo Framework needs entries like this:
         //    array( 'name' => "Caudex", 'variant' => ':r,b,i,bi')
         // while Google provides a very different syntax, using a mix of font weights (instead
         // of bold/regular/etc) and names (italic/regular/etc).
-        // It is not yet clear just how Canvas uses these variants beyond just passing them to Google.
+        // It is not yet clear just how Woo Framework uses these variants beyond just passing them to Google.
         // e.g. These provided by Google API: "regular", "italic", "900", "900italic"
         // need to be translated into this: ":400,900italic,900,400italic" so it can
-        // be used on the web page. I think Canvas does actually *use* these variants,
+        // be used on the web page. I think Woo Framework does actually *use* these variants,
         // which it could in the admin interface, but it just blindly passes them to
         // Google to ask for all variants to be passed back to the web browser, which TBH
         // is inneficient, as it is requresting variants that may never be used.
@@ -271,7 +271,7 @@ class GoogleWebfontsForCanvas
                     array('r', 'i', 'b', 'b', 'bi'),
                     $font['variants']
                 );
-                // Canvas expects the leading ":" to be included in the variant list. It does
+                // Woo Framework expects the leading ":" to be included in the variant list. It does
                 // not insert it at the point of use.
                 $variant = ':' . implode(',', $variants);
             } else {
