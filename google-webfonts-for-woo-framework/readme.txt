@@ -22,6 +22,10 @@ What you should then see, is the ability to select any available Google web font
 in the Canvas administration pages, and have those fonts displayed in your Canvas
 theme.
 
+Register for a Google API key, and turn on "webfonts" for the key here:
+
+http://code.google.com/apis/console
+
 Requires:
 
 PHP >= 5.3
