@@ -6,10 +6,10 @@ plugin - or any other plugin that uses the WooThemes framework - through the Goo
 # Installation
 
 1. Clone this repository.
-2. Put the google-webfonts-for-woo-framework directory and all its contents into the archive google-webfonts-for-woo-framework.zip
+2. Put the google-fonts-for-woo-framework directory and all its contents into the archive google-fonts-for-woo-framework.zip
 3. Install the zip file into WordPres as a plugin in the normal way.
 
-The "releases" directory holds released zip files for convenience. The latest release is also available as google-webfonts-for-woo-framework-latest.zip
+The "releases" directory holds released zip files for convenience. The latest release is also available as google-fonts-for-woo-framework-latest.zip
 
 # Notes
 
