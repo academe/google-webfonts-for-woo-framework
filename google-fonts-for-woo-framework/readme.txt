@@ -17,8 +17,8 @@ The purpose of this plugin is to make all available Google webfonts available to
 It works like this:
 
 1. You register for a Google API key, and make sure it is enabled for web fonts. Set the API key in the plugin settings menu.
-2. The key is used to download the full list of of Google web fonts. This is cached locally.
-3. The full list of fonts is merged into the list that the Canvas theme already knows about.
+2. The key is used to download the full list of Google web fonts. This is cached locally, every twelve hours at present.
+3. The full list of fonts is merged into the list that the Woo framework already knows about.
 
 What you should then see, is the ability to select any available Google web font in the WooThemes theme administration pages, and have those fonts displayed in your theme.
 
@@ -32,7 +32,7 @@ This plugin has been tested against PHP5.3 and the project repository is here:
 
 == Installation ==
 
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
+1. Upload google-fonts-for-woo-framework/ to the `/wp-content/plugins/` directory or google-fonts-for-woo-framework.zip through the "Add Plugins" administration page.
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Add your Google API key to the settings page for the plugin.
 
