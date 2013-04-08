@@ -42,6 +42,16 @@ This plugin has been tested against PHP5.3 and the project repository is here:
 
 A Google API key can be obtained here: http://code.google.com/apis/console
 
+= How can I contribute to this plugin?
+
+This plugin is managed on github here https://github.com/academe/google-webfonts-for-canvas
+Feel free to raise issues there and make pull requests, as well as in the normal way on wordpress.org
+
+= I have installed this plugin and my API key seems to be already set. How?
+
+The option used to store your API key shares it name with several other popular Google Webfonts plugins.
+If you have used, or are using, those plugins too, then the API key setting will be shared. This is by design.
+
 == Screenshots ==
 
 1. 

@@ -9,6 +9,10 @@ plugin - or any other plugin that uses the WooThemes framework - through the Goo
 2. Put the google-fonts-for-woo-framework directory and all its contents into the archive google-fonts-for-woo-framework.zip
 3. Install the zip file into WordPres as a plugin in the normal way.
 
+Alternatively download the plugin from within your WordPress installation. The plugin page is:
+
+http://wordpress.org/extend/plugins/google-fonts-for-woo-framework/
+
 The "releases" directory holds released zip files for convenience. The latest release is also available as google-fonts-for-woo-framework-latest.zip
 
 # Notes
@@ -24,3 +28,7 @@ http://code.google.com/apis/console
 Some simple steps for obtaining the key are shown here:
 
 http://code.garyjones.co.uk/google-developer-api-key
+
+The code is styled more to PSR-1/PSR-2 than to the standard WordPress format. It's just a personal
+preference, and that's the way it is.
+
