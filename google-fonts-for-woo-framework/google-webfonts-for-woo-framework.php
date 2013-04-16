@@ -6,7 +6,7 @@
 Plugin Name: Google Webfonts For Woo Framework
 Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
 Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
-Version: 0.9.6
+Version: 0.9.7
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -50,19 +50,25 @@ class GoogleWebfontsForWooFramework
 
     // The time the fonts are cached for, before we fetch a new batch from Google.
     // TODO: make the time configurable, which would include "indefinite".
-    public $cache_time = 43200; // 60*60*12
+    public $cache_time = 43200; // 60*60*12 seconds = 12 hours
+
+    // New fonts that this plugin brings to the framework.
+    public $new_fonts = array();
+
+    // A snapshot of fonts the framework includes.
+    public $old_fonts = array();
 
     // Initilialise the plugin.
     public function init() {
         //$fonts = $this->getGoogleFontsCached(); var_dump($fonts);
 
         // Add the missing fonts in the admin page.
-        add_action('admin_head', array($this, 'action_admin_head'), 20);
+        add_action('admin_head', array($this, 'action_add_fonts'), 20);
 
         // Add the missing fonts to the non-admin pages too.
         // It needs to be an early action (5) to get in before the theme hook
         // that uses the font list.
-        add_action('wp_head', array($this, 'action_admin_head'), 5);
+        add_action('wp_head', array($this, 'action_add_fonts'), 5);
 
         if (is_admin()) {
             // Add the admin menu.
@@ -131,10 +137,29 @@ class GoogleWebfontsForWooFramework
 
         // Add fields to the section.
 
+        // The API key.
         add_settings_field(
             'google_api_key',
             'Google Developer API Key',
             array($this, 'google_api_key_field'),
+            'gwfc_main_section',
+            'gwfc_main'
+        );
+
+        // List of added fonts (read-only).
+        add_settings_field(
+            'old_fonts',
+            'Framework fonts (view only)',
+            array($this, 'old_fonts_field'),
+            'gwfc_main_section',
+            'gwfc_main'
+        );
+
+        // List of added fonts (read-only).
+        add_settings_field(
+            'new_fonts',
+            'New fonts introduced (view only)',
+            array($this, 'new_fonts_field'),
             'gwfc_main_section',
             'gwfc_main'
         );
@@ -149,9 +174,42 @@ class GoogleWebfontsForWooFramework
 
     // Display the input fields.
 
+    // The Google API Key input field.
     public function google_api_key_field() {
         $option = get_option('google_api_key', '');
         echo "<input id='google_api_key' name='google_api_key' size='80' type='text' value='{$option}' />";
+    }
+
+    // Display the list of original framework fonts.
+    public function old_fonts_field() {
+        if (empty($this->old_fonts)) {
+            echo 'No framework fonts found'; // TODO: translate.
+        } else {
+            echo '<select name="old_fonts" multiple="multiple" size="10">';
+
+            $i = 1;
+            foreach($this->old_fonts as $font) {
+                echo '<option value="'. $i++ .'">' .$font['name']. '</option>';
+            }
+
+            echo '</select>';
+        }
+    }
+
+    // Display the list of new fonts this plugin makes available.
+    public function new_fonts_field() {
+        if (empty($this->new_fonts)) {
+            echo 'No new fonts found'; // TODO: translate.
+        } else {
+            echo '<select name="new_fonts" multiple="multiple" size="10">';
+
+            $i = 1;
+            foreach($this->new_fonts as $font) {
+                echo '<option value="'. $i++ .'">' .$font['name']. '</option>';
+            }
+
+            echo '</select>';
+        }
     }
 
     // Validate the submitted fields.
@@ -171,15 +229,22 @@ class GoogleWebfontsForWooFramework
 
 
     /**
-     * In the admin section, insert any missing Google fonts.
+     * Insert any missing Google fonts.
      */
 
-    public function action_admin_head()
+    public function action_add_fonts()
     {
+        // This array is what the Woo Framework defines and uses.
         global $google_fonts;
 
         // If there is no global google fonts list, bail out.
         if (empty($google_fonts) || !is_array($google_fonts)) return;
+
+        // Take a snapshot, before we mess with the list, and sort them by name.
+        $this->old_fonts = $google_fonts;
+        uasort($this->old_fonts, function($a, $b) {
+            return ($a['name'] < $b['name']) ? -1 : 1;
+        });
 
         // Get the full list of Google fonts available.
         $all_fonts = $this->getGoogleFontsCached();
@@ -197,8 +262,11 @@ class GoogleWebfontsForWooFramework
         foreach($all_fonts as $font) {
             if (isset($families[$font['name']])) continue;
 
-            $google_fonts[] = $font;
+            $this->new_fonts[] = $font;
         }
+
+        // If we have any fonts to add, then add them to the list.
+        if (!empty($this->new_fonts)) $google_fonts += $this->new_fonts;
     }
 
     /**
