@@ -6,7 +6,7 @@
 Plugin Name: Google Webfonts For Woo Framework
 Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
 Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
-Version: 0.9.8
+Version: 0.9.9
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -32,12 +32,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  * Set default settings on installation.
  */
 
+function GoogleWebfontsForWooFramework_activation()
+{
+    $google_api_key = get_option('google_api_key');
+    if ($google_api_key === false) {
+        add_option('google_api_key', '', false, true);
+    }
+}
+register_activation_hook(__FILE__, 'GoogleWebfontsForWooFramework_activation');
+
+/*
+// PHP5.3 only.
 register_activation_hook(__FILE__, function() {
     $google_api_key = get_option('google_api_key');
     if ($google_api_key === false) {
         add_option('google_api_key', '', false, true);
     }
 });
+*/
 
 // Set the main plugin as a global object.
 $GWFC_OBJ = new GoogleWebfontsForWooFramework();
@@ -58,10 +70,11 @@ class GoogleWebfontsForWooFramework
     // A snapshot of fonts the framework includes.
     public $old_fonts = array();
 
+    // The Google API URL we will fetch the font list from.
+    public $api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=';
+
     // Initilialise the plugin.
     public function init() {
-        //$fonts = $this->getGoogleFontsCached(); var_dump($fonts);
-
         // Add the missing fonts in the admin page.
         add_action('admin_head', array($this, 'action_add_fonts'), 20);
 
@@ -192,7 +205,7 @@ class GoogleWebfontsForWooFramework
                 echo '<option value="'. $i++ .'">' .$font['name']. '</option>';
             }
 
-            echo '</select>';
+            echo '</select> (' . count($this->old_fonts) . ')';
         }
     }
 
@@ -208,7 +221,7 @@ class GoogleWebfontsForWooFramework
                 echo '<option value="'. $i++ .'">' .$font['name']. '</option>';
             }
 
-            echo '</select>';
+            echo '</select> (' . count($this->new_fonts) . ')';
         }
     }
 
@@ -232,6 +245,15 @@ class GoogleWebfontsForWooFramework
      * Insert any missing Google fonts.
      */
 
+    public function sort_font_array($a, $b)
+    {
+        return ($a['name'] < $b['name']) ? -1 : 1;
+    }
+
+    /**
+     * Insert any missing Google fonts.
+     */
+
     public function action_add_fonts()
     {
         // This array is what the Woo Framework defines and uses.
@@ -242,9 +264,14 @@ class GoogleWebfontsForWooFramework
 
         // Take a snapshot, before we mess with the list, and sort them by name.
         $this->old_fonts = $google_fonts;
+        uasort($this->old_fonts, array($this, 'sort_font_array'));
+
+        /*
+        // PHP5.3 only.
         uasort($this->old_fonts, function($a, $b) {
             return ($a['name'] < $b['name']) ? -1 : 1;
         });
+        */
 
         // Get the full list of Google fonts available.
         $all_fonts = $this->getGoogleFontsCached();
@@ -292,7 +319,6 @@ class GoogleWebfontsForWooFramework
     public function getGoogleFonts()
     {
         $google_api_key = get_option('google_api_key', '');
-        $api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=';
         $font_list = false;
 
         // If not API key is set yet, then abort.
@@ -300,7 +326,7 @@ class GoogleWebfontsForWooFramework
 
         // The API key should be URL-safe.
         // We need to ensure it is when setting it in the admin page.
-        $api_data = wp_remote_get($api_url . $google_api_key);
+        $api_data = wp_remote_get($this->api_url . $google_api_key);
 
         $response = $api_data['response'];
 
@@ -339,6 +365,7 @@ class GoogleWebfontsForWooFramework
                     array('r', 'i', 'b', 'b', 'bi'),
                     $font['variants']
                 );
+
                 // Woo Framework expects the leading ":" to be included in the variant list. It does
                 // not insert it at the point of use.
                 $variant = ':' . implode(',', $variants);
