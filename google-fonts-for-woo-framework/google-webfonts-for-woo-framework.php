@@ -6,7 +6,7 @@
 Plugin Name: Google Webfonts For Woo Framework
 Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
 Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
-Version: 0.9.9
+Version: 0.9.10
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -293,7 +293,7 @@ class GoogleWebfontsForWooFramework
         }
 
         // If we have any fonts to add, then add them to the list.
-        if (!empty($this->new_fonts)) $google_fonts += $this->new_fonts;
+        if (!empty($this->new_fonts)) $google_fonts = array_merge($google_fonts, $this->new_fonts);
     }
 
     /**
