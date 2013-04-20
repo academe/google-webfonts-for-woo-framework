@@ -30,6 +30,8 @@ This plugin has been tested against PHP5.3 and the project repository is here:
 
 [https://github.com/academe/google-webfonts-for-woo-framework/](https://github.com/academe/google-webfonts-for-woo-framework/)
 
+Changes have been made so that it works with PHP5.2 and has been reported as working. However, I work under 5.3 so some incompatibilities may creep in by accident from time-to-time - just report tham and I will do my best to fix as quickly as possible.
+
 == Installation ==
 
 1. Upload google-fonts-for-woo-framework/ to the `/wp-content/plugins/` directory or google-fonts-for-woo-framework.zip through the "Add Plugins" administration page.
@@ -42,12 +44,12 @@ This plugin has been tested against PHP5.3 and the project repository is here:
 
 A Google API key can be obtained here: http://code.google.com/apis/console
 
-= How can I contribute to this plugin?
+= How can I contribute to this plugin? =
 
 This plugin is managed on github here https://github.com/academe/google-webfonts-for-canvas
 Feel free to raise issues there and make pull requests, as well as in the normal way on wordpress.org
 
-= I have installed this plugin and my API key seems to be already set. How?
+= I have installed this plugin and my API key seems to be already set. How? =
 
 The option used to store your API key shares it name with several other popular Google Webfonts plugins.
 If you have used, or are using, those plugins too, then the API key setting will be shared. This is by design.
