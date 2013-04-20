@@ -46,7 +46,7 @@ A Google API key can be obtained here: http://code.google.com/apis/console
 
 = How can I contribute to this plugin? =
 
-This plugin is managed on github here https://github.com/academe/google-webfonts-for-canvas
+This plugin is managed on github here https://github.com/academe/google-webfonts-for-woo-framework
 Feel free to raise issues there and make pull requests, as well as in the normal way on wordpress.org
 
 = I have installed this plugin and my API key seems to be already set. How? =
