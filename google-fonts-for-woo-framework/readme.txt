@@ -61,6 +61,8 @@ If you have used, or are using, those plugins too, then the API key setting will
 
 == Changelog ==
 
-
+* i18n complete.
+* Show fonts used by the theme as selected in admin page.
+* Split admin functions into a separate script and class.
 
 == Upgrade notice ==
