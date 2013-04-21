@@ -4,7 +4,7 @@ Donate link:
 Tags: woothemes, google webfonts
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 0.9.10
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,8 +61,10 @@ If you have used, or are using, those plugins too, then the API key setting will
 
 == Changelog ==
 
+= Version 1.0.0 =
 * i18n complete.
 * Show fonts used by the theme as selected in admin page.
 * Split admin functions into a separate script and class.
+* Ability to preview fonts.
 
 == Upgrade notice ==
