@@ -26,8 +26,8 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     {
         // And "options_page" will go under the settings menu as a sub-menu.
         add_options_page(
-            'Google Webfonts for Woo Framework Options',
-            'Google Webfonts for Woo Framework',
+            __('Google Webfonts for Woo Framework Options'),
+            __('Google Webfonts for Woo Framework'),
             'manage_options',
             'gw-for-wooframework',
             array($this, 'plugin_options')
@@ -42,14 +42,14 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
         echo '<div class="wrap">';
         screen_icon();
-        echo '<h2>Google Webfonts for Woo Framework Options</h2>';
+        echo '<h2>' . __('Google Webfonts for Woo Framework Options') . '</h2>';
 
         echo '<form method="post" action="options.php">';
 
+        echo '<table class="form-table">';
+
         settings_fields('gwfc-group');
         do_settings_sections('gwfc_main_section');
-
-        echo '<table class="form-table">';
 
         echo '</table>';
 
@@ -73,7 +73,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
         add_settings_section(
             'gwfc_main', 
-            'Main Settings', 
+            __('Main Settings'), 
             array($this, 'plugin_main_section_text'),
             'gwfc_main_section'
         );
@@ -83,7 +83,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // The API key.
         add_settings_field(
             'google_api_key',
-            'Google Developer API Key',
+            __('Google Developer API Key'),
             array($this, 'google_api_key_field'),
             'gwfc_main_section',
             'gwfc_main'
@@ -92,7 +92,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // List of added fonts (read-only).
         add_settings_field(
             'old_fonts',
-            'Framework fonts (view only)',
+            __('Framework fonts (view only)'),
             array($this, 'old_fonts_field'),
             'gwfc_main_section',
             'gwfc_main'
@@ -101,7 +101,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // List of added fonts (read-only).
         add_settings_field(
             'new_fonts',
-            'New fonts introduced (view only)',
+            __('New fonts introduced (view only)'),
             array($this, 'new_fonts_field'),
             'gwfc_main_section',
             'gwfc_main'
@@ -112,7 +112,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     public function plugin_main_section_text()
     {
-        echo '<p>Google Webfonts for WooThemes Woo Framework.</p>';
+        echo '<p>' . __('Google Webfonts for WooThemes Woo Framework.') . '</p>';
     }
 
     // Display the input fields.
@@ -125,14 +125,17 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     // Display the list of original framework fonts.
     public function old_fonts_field() {
+        $used_fonts = $this->fonts_used_in_theme();
+
         if (empty($this->old_fonts)) {
-            echo 'No framework fonts found'; // TODO: translate.
+            _e('No framework fonts found');
         } else {
             echo '<select name="old_fonts" multiple="multiple" size="10">';
 
             $i = 1;
             foreach($this->old_fonts as $font) {
-                echo '<option value="'. $i++ .'">' .$font['name']. '</option>';
+                $selected = (isset($used_fonts[$font['name']])) ? ' selected="selected"' : '';
+                echo '<option value="'. $i++ .'"' . $selected . '>' .$font['name']. '</option>';
             }
 
             echo '</select> (' . count($this->old_fonts) . ')';
@@ -141,14 +144,17 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     // Display the list of new fonts this plugin makes available.
     public function new_fonts_field() {
+        $used_fonts = $this->fonts_used_in_theme();
+
         if (empty($this->new_fonts)) {
-            echo 'No new fonts found'; // TODO: translate.
+            _e('No new fonts found');
         } else {
             echo '<select name="new_fonts" multiple="multiple" size="10">';
 
             $i = 1;
             foreach($this->new_fonts as $font) {
-                echo '<option value="'. $i++ .'">' .$font['name']. '</option>';
+                $selected = (isset($used_fonts[$font['name']])) ? ' selected="selected"' : '';
+                echo '<option value="'. $i++ .'"' . $selected . '>' . $font['name'] . '</option>';
             }
 
             echo '</select> (' . count($this->new_fonts) . ')';
@@ -168,6 +174,50 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         }
 
         return $input;
+    }
+
+    /**
+     * Get a list of all the fonts used in the theme at present.
+     */
+
+    public function fonts_used_in_theme()
+    {
+        global $google_fonts;
+        global $woo_options;
+        static $fonts = null;
+
+        // If we have done the search already, then returned the cached list.
+        if (is_array($fonts)) return $fonts;
+
+        // The font list we will return.
+        $fonts = array();
+
+        // List of font names we find in the options of the theme.
+        $option_fonts = array();
+
+        // Go through the options in the theme.
+        if (!empty($woo_options)) {
+            foreach ($woo_options as $option) {
+                // Check if option has "face" in array.
+                if (is_array($option) && isset($option['face'])) {
+                    if (!isset($option_fonts[$option['face']])) {
+                        $option_fonts[$option['face']] = $option['face'];
+                    }
+                }
+            }
+
+            // Now if we have found a list of used font families, check which
+            // are available as Google fonts.
+            if (!empty($option_fonts)) {
+                foreach ($google_fonts as $font) {
+                    if (isset($option_fonts[$font['name']]) && !isset($fonts[$font['name']])) {
+                        $fonts[$font['name']] = $font['name'];
+                    }
+                }
+            }
+        }
+
+        return $fonts;
     }
 
 }

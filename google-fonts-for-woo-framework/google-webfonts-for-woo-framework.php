@@ -30,6 +30,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 /**
  * Set default settings on installation.
+ * CHECKME: can this be wrapped with is_admin()?
  */
 
 function GoogleWebfontsForWooFramework_activation()
