@@ -138,7 +138,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     public function plugin_main_section_text()
     {
-        echo '<p>' . __('Google Webfonts for WooThemes Woo Framework. Fonts show seleceted have been used within the theme.') . '</p>';
+        echo '<p>' . __('Google Webfonts for WooThemes Woo Framework. Fonts show selected have been used within the theme.') . '</p>';
     }
 
     // Display the input fields.
