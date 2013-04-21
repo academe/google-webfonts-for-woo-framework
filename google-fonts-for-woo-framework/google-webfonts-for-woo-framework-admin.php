@@ -6,6 +6,19 @@
 
 class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 {
+    // Some constants to help make sense of the admin page structure.
+    const settings_group_name = 'gwfc-group';
+    const settings_page_slug = 'gw-for-wooframework';
+    // CHECKME: the 'page' should "match the page slug" according to some codex documentation,
+    // but is different in many code examples.
+    const settings_page = 'gwfc_main_section';
+    const settings_section_id = 'gwfc_main';
+
+    // Field names.
+    const settings_field_api_key = 'google_api_key';
+    const settings_field_new_fonts = 'new_fonts';
+    const settings_field_old_fonts = 'old_fonts';
+
     public function init()
     {
         // Add the missing fonts in the admin page.
@@ -29,7 +42,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             __('Google Webfonts for Woo Framework Options'),
             __('Google Webfonts for Woo Framework'),
             'manage_options',
-            'gw-for-wooframework',
+            self::settings_page_slug,
             array($this, 'plugin_options')
         );
     }
@@ -48,8 +61,8 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
         echo '<table class="form-table">';
 
-        settings_fields('gwfc-group');
-        do_settings_sections('gwfc_main_section');
+        settings_fields(self::settings_group_name);
+        do_settings_sections(self::settings_page);
 
         echo '</table>';
 
@@ -64,47 +77,47 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // Register the settings.
 
         register_setting(
-            'gwfc-group', 
-            'google_api_key',
-            array($this, 'google_api_key_validate')
+            self::settings_group_name, 
+            self::settings_field_api_key,
+            array($this, self::settings_field_api_key . '_validate')
         );
 
         // Register a section in the page.
 
         add_settings_section(
-            'gwfc_main', 
+            self::settings_section_id, 
             __('Main Settings'), 
             array($this, 'plugin_main_section_text'),
-            'gwfc_main_section'
+            self::settings_page
         );
 
         // Add fields to the section.
 
         // The API key.
         add_settings_field(
-            'google_api_key',
+            self::settings_field_api_key,
             __('Google Developer API Key'),
-            array($this, 'google_api_key_field'),
-            'gwfc_main_section',
-            'gwfc_main'
+            array($this, self::settings_field_api_key . '_field'),
+            self::settings_page,
+            self::settings_section_id // section
         );
 
         // List of added fonts (read-only).
         add_settings_field(
-            'old_fonts',
+            self::settings_field_old_fonts,
             __('Framework fonts (view only)'),
-            array($this, 'old_fonts_field'),
-            'gwfc_main_section',
-            'gwfc_main'
+            array($this, self::settings_field_old_fonts . '_field'),
+            self::settings_page,
+            self::settings_section_id
         );
 
         // List of added fonts (read-only).
         add_settings_field(
-            'new_fonts',
+            self::settings_field_new_fonts,
             __('New fonts introduced (view only)'),
-            array($this, 'new_fonts_field'),
-            'gwfc_main_section',
-            'gwfc_main'
+            array($this, self::settings_field_new_fonts . '_field'),
+            self::settings_page,
+            self::settings_section_id
         );
     }
 
@@ -119,8 +132,8 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     // The Google API Key input field.
     public function google_api_key_field() {
-        $option = get_option('google_api_key', '');
-        echo "<input id='google_api_key' name='google_api_key' size='80' type='text' value='{$option}' />";
+        $option = get_option(self::settings_field_api_key, '');
+        echo "<input id='" . self::settings_field_api_key . "' name='" . self::settings_field_api_key . "' size='80' type='text' value='{$option}' />";
     }
 
     // Display the list of original framework fonts.
@@ -130,7 +143,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         if (empty($this->old_fonts)) {
             _e('No framework fonts found');
         } else {
-            echo '<select name="old_fonts" multiple="multiple" size="10">';
+            echo '<select name="' . self::settings_field_old_fonts . '" multiple="multiple" size="10">';
 
             $i = 1;
             foreach($this->old_fonts as $font) {
@@ -149,7 +162,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         if (empty($this->new_fonts)) {
             _e('No new fonts found');
         } else {
-            echo '<select name="new_fonts" multiple="multiple" size="10">';
+            echo '<select name="' . self::settings_field_new_fonts . '" multiple="multiple" size="10">';
 
             $i = 1;
             foreach($this->new_fonts as $font) {
@@ -166,7 +179,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     public function google_api_key_validate($input) {
         // Make sure it is a URL-safe string.
         if ($input != rawurlencode($input)) {
-            add_settings_error('google_api_key', 'texterror', 'API key contains invalid characters', 'error');
+            add_settings_error(self::settings_field_api_key, 'texterror', __('API key contains invalid characters'), 'error');
         } else {
             // If valid, then discard the current fonts cache, so a fresh fetch is
             // done with the new key.
