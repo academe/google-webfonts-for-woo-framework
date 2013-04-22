@@ -32,6 +32,8 @@ This plugin has been tested against PHP5.3 and the project repository is here:
 
 Changes have been made so that it works with PHP5.2 and has been reported as working. However, I work under 5.3 so some incompatibilities may creep in by accident from time-to-time - just report them and I will do my best to fix as quickly as possible.
 
+Please let me know how this plugin works for you, whether you like it, and how it can be improved.
+
 == Installation ==
 
 1. Upload google-fonts-for-woo-framework/ to the `/wp-content/plugins/` directory or google-fonts-for-woo-framework.zip through the "Add Plugins" administration page.
