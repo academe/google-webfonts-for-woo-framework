@@ -111,7 +111,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // List of added fonts (read-only).
         add_settings_field(
             self::settings_field_old_fonts,
-            __('Framework fonts (view only)'),
+            __('Framework fonts built-in'),
             array($this, self::settings_field_old_fonts . '_field'),
             self::settings_page,
             self::settings_section_id
@@ -120,7 +120,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // List of added fonts (read-only).
         add_settings_field(
             self::settings_field_new_fonts,
-            __('New fonts introduced (view only)'),
+            __('New fonts available and used'),
             array($this, self::settings_field_new_fonts . '_field'),
             self::settings_page,
             self::settings_section_id
@@ -141,7 +141,9 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     public function plugin_main_section_text()
     {
-        echo '<p>' . __('Google Webfonts for WooThemes Woo Framework. Fonts show selected have been used within the theme.') . '</p>';
+        echo '<p>' . __('Google Webfonts for WooThemes Woo Framework. All fonts listed here are available to the theme.') . '</p>';
+        echo '<p>' . __('Fonts shown selected here have been used in the theme.') . '</p>';
+        echo '<p>' . __('To preview any fonts, select the fonts from either list and press the preview button..') . '</p>';
     }
 
     // Display the input fields.
@@ -194,7 +196,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         $used_fonts = $this->fonts_used_in_theme();
 
         if (empty($this->new_fonts)) {
-            _e('No new fonts found');
+            _e('No new fonts found (check the API)');
         } else {
             echo '<select name="' . self::settings_field_new_fonts . '" multiple="multiple" size="10" class="' . self::settings_field_select_class . '">';
 

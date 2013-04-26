@@ -35,7 +35,7 @@ jQuery.fn.gwfwFontPreview = (function(options) {
             // Display the preview text.
             $('#gwfw-font-previews').prepend(
                 '<p style="font-weight: bold">' + font_list[i] + '</p>'
-                + '<p style="font-family:\'' + font_name + '\'; font-size: 36pt; line-height: 36pt;">' + settings.preview_text + '</p>'
+                + '<p style="font-family:' + font_list[i] + '; font-size: 36pt; line-height: 36pt;">' + settings.preview_text + '</p>'
             );
 
             // Since the Woo framework does not load the fonts in the admin section until needed, 
