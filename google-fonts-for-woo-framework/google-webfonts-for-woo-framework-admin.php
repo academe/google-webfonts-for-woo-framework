@@ -36,6 +36,9 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             add_action('admin_init', array($this, 'register_settings'));
         }
 
+        // Action for displaying admin notices.
+        add_action('admin_notices', array($this, 'display_admin_notice'));
+
         parent::init();
     }
 

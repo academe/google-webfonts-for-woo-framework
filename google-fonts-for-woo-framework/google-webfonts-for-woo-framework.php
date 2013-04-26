@@ -81,6 +81,9 @@ class GoogleWebfontsForWooFramework
     // The Google API URL we will fetch the font list from.
     public $api_url = 'https://www.googleapis.com/webfonts/v1/webfonts?key=';
 
+    // Admin notice text.
+    public $admin_notice = '';
+
     // Initilialise the plugin.
     public function init() {
         // Add the missing fonts to the non-admin pages too.
@@ -181,6 +184,17 @@ class GoogleWebfontsForWooFramework
     }
 
     /**
+     * Display an admin notice if there is one.
+     */
+
+    public function display_admin_notice() {
+        if ($this->admin_notice == '') return;
+        echo '<div class="updated">';
+        echo $this->admin_notice;
+        echo '</div>';
+    }
+
+    /**
      * Get the full list of fonts from Google.
      */
 
@@ -195,6 +209,13 @@ class GoogleWebfontsForWooFramework
         // The API key should be URL-safe.
         // We need to ensure it is when setting it in the admin page.
         $api_data = wp_remote_get($this->api_url . $google_api_key);
+
+        // If the fetch failed, then report it to the admin.
+        if (is_wp_error($api_data)) {
+            $error_message = $api_data->get_error_message();
+            $this->admin_notice = "<p>Error fetching Google font: $error_message</p>";
+            return $font_list;
+        }
 
         $response = $api_data['response'];
 
