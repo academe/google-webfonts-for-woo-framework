@@ -4,7 +4,7 @@ Donate link:
 Tags: woothemes, google webfonts
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,12 +56,21 @@ Feel free to raise issues there and make pull requests, as well as in the normal
 The option used to store your API key shares it name with several other popular Google Webfonts plugins.
 If you have used, or are using, those plugins too, then the API key setting will be shared. This is by design.
 
+= I see errors reported when fetching the nerw Google webfonts =
+
+Some hosts may not be set up to allow your site to fetch data from remote sites. Please report any 
+such errors on the plugin page or github, and we will try looking for a workaround.
+
 == Screenshots ==
 
 1. 
 2. 
 
 == Changelog ==
+
+= Version 1.1.0 =
+* Reports errors fetching Google fonts.
+* Updates the built-in framework fonts with new variations, improving quality of displayed fonts.
 
 = Version 1.0.0 =
 * i18n complete.
