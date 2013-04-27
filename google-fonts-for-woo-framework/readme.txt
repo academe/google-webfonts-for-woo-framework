@@ -1,7 +1,7 @@
 === Google Webfonts For Woo Framework ===
 Contributors: judgej
 Donate link: 
-Tags: woothemes, google webfonts
+Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 3.5.1
 Stable tag: 1.1.0
