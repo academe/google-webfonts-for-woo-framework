@@ -16,10 +16,11 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     // Field names.
     const settings_form_id = 'gwfc_settings_form';
-    const settings_field_api_key = 'google_api_key';
-    const settings_field_new_fonts = 'new_fonts';
-    const settings_field_old_fonts = 'old_fonts';
-    const settings_field_preview = 'preview_fonts';
+    const settings_field_api_key = 'googleApiKey';
+    const settings_option_api_key = 'google_api_key';
+    const settings_field_new_fonts = 'newFonts';
+    const settings_field_old_fonts = 'oldFonts';
+    const settings_field_preview = 'previewFonts';
     // Give all font selector select form items a class so we can find them.
     const settings_field_select_class = 'font-selector';
 
@@ -28,18 +29,16 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     public function init()
     {
         // Add the missing fonts in the admin page.
-        add_action('admin_head', array($this, 'action_add_fonts'), 20);
+        add_action('admin_head', array($this, 'action_set_fonts'), 5);
 
-        if (is_admin()) {
-            // Add the admin menu.
-            add_action('admin_menu', array($this, 'admin_menu'));
+        // Add the admin menu.
+        add_action('admin_menu', array($this, 'admin_menu'));
 
-            // Register the settings.
-            add_action('admin_init', array($this, 'register_settings'));
-        }
+        // Register the settings.
+        add_action('admin_init', array($this, 'register_settings'));
 
         // Action for displaying admin notices.
-        add_action('admin_notices', array($this, 'display_admin_notice'));
+        add_action('admin_notices', array($this, 'displayAdminNotice'));
 
         parent::init();
     }
@@ -48,10 +47,15 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      * Display an admin notice if there is one.
      */
 
-    public function display_admin_notice() {
-        if ($this->admin_notice == '') return;
+    public function displayAdminNotice($message = null) {
+        if ( ! isset($message)) $message = $this->admin_notice;
+        if ($message == '') return;
+
+        // Wrap in paragraphs if no tags found in the message.
+        if (strpos('<', $message) === false) $message = '<p>' . $message . '</p>';
+
         echo '<div class="updated">';
-        echo $this->admin_notice;
+        echo $message;
         echo '</div>';
     }
 
@@ -89,9 +93,12 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
         if (empty($this->current_google_fonts)) {
             $this->current_google_fonts = $this->getFallbackFontData();
-            $this->admin_notice = __('Cannot access Google Webfonts. Check your API key. Using fallback font list instead.');
-            $this->display_admin_notice();
-            $this->admin_message = 'wooo';
+
+            // Display the admin notive inline.
+            $this->displayAdminNotice(
+                __('Cannot access Google Webfonts.'
+                . ' Check your API key. Using fallback font list instead.')
+            );
         }
 
         echo '<form method="post" action="options.php" id="' . self::settings_form_id . '">';
@@ -118,8 +125,8 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
         register_setting(
             self::settings_group_name, 
-            self::settings_field_api_key,
-            array($this, self::settings_field_api_key . '_validate')
+            self::settings_option_api_key,
+            array($this, self::settings_field_api_key . 'Validate')
         );
 
         // Register a section in the page.
@@ -127,7 +134,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         add_settings_section(
             self::settings_section_id, 
             __('Main Settings'), 
-            array($this, 'plugin_main_section_text'),
+            array($this, 'pluginMainSectionText'),
             self::settings_page
         );
 
@@ -137,7 +144,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         add_settings_field(
             self::settings_field_api_key,
             __('Google Developer API Key'),
-            array($this, self::settings_field_api_key . '_field'),
+            array($this, self::settings_field_api_key . 'Field'),
             self::settings_page,
             self::settings_section_id // section
         );
@@ -146,7 +153,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         add_settings_field(
             self::settings_field_old_fonts,
             __('Framework fonts built-in'),
-            array($this, self::settings_field_old_fonts . '_field'),
+            array($this, self::settings_field_old_fonts . 'Field'),
             self::settings_page,
             self::settings_section_id
         );
@@ -155,7 +162,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         add_settings_field(
             self::settings_field_new_fonts,
             __('New fonts available and used'),
-            array($this, self::settings_field_new_fonts . '_field'),
+            array($this, self::settings_field_new_fonts . 'Field'),
             self::settings_page,
             self::settings_section_id
         );
@@ -164,7 +171,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         add_settings_field(
             self::settings_field_preview,
             __('Preview the selected fonts'),
-            array($this, self::settings_field_preview . '_field'),
+            array($this, self::settings_field_preview . 'Field'),
             self::settings_page,
             self::settings_section_id
         );
@@ -175,7 +182,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      * Render summary text/introduction to the main section.
      */
 
-    public function plugin_main_section_text()
+    public function pluginMainSectionText()
     {
         echo '<p>' . __('Google Webfonts for WooThemes Woo Framework. All fonts listed here are available to the theme.') . '</p>';
         echo '<p>' . __('Fonts shown selected here have been used in the theme.') . '</p>';
@@ -190,9 +197,9 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      * Render the Google API Key input field.
      */
 
-    public function google_api_key_field() {
-        $option = get_option(self::settings_field_api_key, '');
-        echo "<input id='" . self::settings_field_api_key . "' name='" . self::settings_field_api_key . "' size='80' type='text' value='{$option}' />";
+    public function googleApiKeyField() {
+        $option = get_option(self::settings_option_api_key, '');
+        echo "<input id='" . self::settings_option_api_key . "' name='" . self::settings_option_api_key . "' size='80' type='text' value='{$option}' />";
     }
 
     /**
@@ -211,32 +218,63 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     }
 
     /**
-     * Expand an array of variants from Google into a more friendly list.
+     * Expand an array of variants from Google into a more friendly display-only list.
      */
 
-    public function expand_google_variants($variants)
+    public function expandGoogleVariants($variants)
     {
-        return str_replace(
-            array('i', '200', '400', '700', '800', '900'),
-            array(' italic', 'light', 'regular', 'bold', 'extra-bold', 'ultra-bold'),
+        $variants = str_replace(
+            array('i', '100', '200', '300', '400', '500', '600', '700', '800', '900'),
+            array(' italic', 'ultra-light', 'light', 'thin', 'regular', 'medium', 'semi-bold', 'bold', 'extra-bold', 'ultra-bold'),
             $variants
         );
+
+        // Combine variants where one is an italic version of another.
+        // The lists of variants can get very long if we don't do this.
+        // We look for {variant} and {variant italic} and combine them to a single {variant+italic}
+        $normal = array();
+        $italics = array();
+        foreach($variants as $variant) {
+            if (strpos($variant, ' italic') !== false) {
+                $italics[$variant] = $variant;
+            } else {
+                $normal[$variant] = $variant;
+            }
+        }
+
+        // Rebuild the variants list.
+        $variants = array();
+        foreach($normal as $variant) {
+            if (isset($italics[$variant . ' italic'])) {
+                $variants[] = $variant . '+' . 'italic';
+                unset($italics[$variant . ' italic']);
+            } else {
+                $variants[] = $variant;
+            }
+        }
+
+        // Merge in any italic variants left over, that don't have non-italic versions.
+        if ( ! empty($italics)) {
+            $variants = array_merge($variants, $italics);
+        }
+
+        return $variants;
     }
 
     /**
      * Render the list of original framework fonts.
      */
 
-    public function old_fonts_field() {
-        $used_fonts = $this->fonts_used_in_theme();
+    public function oldFontsField() {
+        $used_fonts = $this->fontsUsedInTheme();
 
-        if (empty($this->old_fonts)) {
+        if (empty($this->old_woo_google_fonts)) {
             _e('No framework fonts found');
         } else {
             echo '<select name="' . self::settings_field_old_fonts . '" multiple="multiple" size="10" class="' . self::settings_field_select_class . '">';
 
             $i = 1;
-            foreach($this->old_fonts as $font) {
+            foreach($this->old_woo_google_fonts as $font) {
                 $selected = (isset($used_fonts[$font['name']])) ? ' selected="selected"' : '';
 
                 echo '<option value="'. $font['name'] .'"' . $selected . '>' 
@@ -245,17 +283,16 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
                     . '</option>';
             }
 
-            echo '</select> (' . count($this->old_fonts) . ')';
+            echo '</select> (' . count($this->old_woo_google_fonts) . ')';
         }
     }
 
     /**
      * Render the list of new fonts this plugin makes available.
-     * FIXME: HTML encode the font name.
      */
 
-    public function new_fonts_field() {
-        $used_fonts = $this->fonts_used_in_theme();
+    public function newFontsField() {
+        $used_fonts = $this->fontsUsedInTheme();
 
         echo '<select name="' . self::settings_field_new_fonts . '" multiple="multiple" size="10" class="' . self::settings_field_select_class . '">';
 
@@ -263,9 +300,9 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         foreach($this->current_google_fonts as $name => $variants) {
             $selected = (isset($used_fonts[$name])) ? ' selected="selected"' : '';
 
-            echo '<option value="'. $name .'"' . $selected . '>' 
+            echo '<option value="'. htmlspecialchars($name) .'"' . $selected . '>' 
                 . htmlspecialchars($name)
-                . (!empty($variants) ? ' (' . implode(', ', $this->expand_google_variants($variants)) . ')' : '')
+                . (!empty($variants) ? ' (' . implode(', ', $this->expandGoogleVariants($variants)) . ')' : '')
                 . '</option>';
         }
 
@@ -276,7 +313,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      * Preview any selected fonts.
      */
 
-    public function preview_fonts_field() {
+    public function previewFontsField() {
         //
         // Here provide the preview.
         //
@@ -300,7 +337,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      * Validate the submitted fields.
      */
 
-    public function google_api_key_validate($input) {
+    public function googleApiKeyValidate($input) {
         // Make sure it is a URL-safe string.
         if ($input != rawurlencode($input)) {
             add_settings_error(self::settings_field_api_key, 'texterror', __('API key contains invalid characters'), 'error');
@@ -320,7 +357,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      * TODO: check out global $woo_used_google_fonts first.
      */
 
-    public function fonts_used_in_theme()
+    public function fontsUsedInTheme()
     {
         global $google_fonts;
         global $woo_options;
@@ -364,7 +401,8 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     /**
      * Get the full list of fonts from Google.
      * Return as an array: font-family => array(variants)
-     * This is the same format as returned by getFallbackFonts()
+     * This is the same format as returned by getFallbackFonts(), and is
+     * actually used to generate the content of fonts.json
      */
 
     public function getGoogleFontData()
@@ -382,7 +420,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // If the fetch failed, then report it to the admin.
         if (is_wp_error($api_data)) {
             $error_message = $api_data->get_error_message();
-            $this->admin_notice = "<p>Error fetching Google font: $error_message</p>";
+            $this->admin_notice = "Error fetching Google font: $error_message";
             return $font_list;
         }
 
@@ -391,6 +429,9 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         if (200 === $response['code']) {
             $font_list = json_decode($api_data['body'], true);
         }
+
+        // At this point we could try deciphering the error messages that Google returns,
+        // but they are complex structures and the cost/benefit is probably not worth it.
 
         if (empty($font_list) || !is_array($font_list)) return $font_list;
 
@@ -402,16 +443,18 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             // an explicit weight. This makes it easier to process later.
             // Also abreviate "italic" to "i".
             //
-            // Font weights are:
-            // 100 ultra-light
-            // 200 light
-            // 300 book
-            // 400 normal
-            // 500 medium
-            // 600 semi-bold
-            // 700 bold
-            // 800 extra-bold
-            // 900 ultra-bold
+            // Font weights are (as defined by Google's font overview pages):
+            //  100 ultra-light
+            //  200 light
+            //  300 book (Woo Framework calls this "thin")
+            //  400 normal
+            //  500 medium
+            //  600 semi-bold
+            //  700 bold
+            //  800 extra-bold
+            //  900 ultra-bold
+            // Every list of font weights have different mappings, so beware this is
+            // not an exact science.
 
             foreach($variants as $vkey => $vname) {
                 if ($vname == 'regular') $variants[$vkey] = '400';
@@ -440,13 +483,13 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     public function getGoogleFonts()
     {
+        // Get the font data from Google.
         $font_list = $this->getGoogleFontData();
 
         if (empty($font_list)) return $font_list;
 
-        // We want to go through the list and abbreviate it.
-        // Some of the variant names are abreviated. We could go further, with the weights.
-        // For example, 700 == bold == b == 7
+        // Format the font data in the way the Woo Framework expects.
+
         $fonts = array();
         foreach($font_list as $family => $variants) {
             if ( ! empty($variants)) {
