@@ -20,9 +20,9 @@ jQuery.fn.gwfwFontPreview = (function(options) {
     // For each select element that contains a list of fonts (identified by the form id
     // and the class name we have given them), pull out
     // all the selected fonts so we have a full list.
-    $('#' + settings.form_id + ' select.' + settings.font_selector_class + ' :selected')
+    $('#' + settings.form_id + ' select.' + settings.font_selector_class + '.new-fonts :selected')
         .each(function(i){
-            font_list.push($(this).val());
+            font_list.push(this); //.val()
         });
     ;
 
@@ -31,16 +31,19 @@ jQuery.fn.gwfwFontPreview = (function(options) {
 
     // If we have any selected fonts, then loop through them to create the previews.
     if (font_list.length > 0) {
+        var font_style = ($('input#preview-italic:checked').length ? 'italic' : 'normal');
+        var font_weight = $('select#preview-weight').val();
+
         for(var i = 0; i < font_list.length; i++) {
             // Display the preview text.
             $('#gwfw-font-previews').prepend(
-                '<p style="font-weight: bold">' + font_list[i] + '</p>'
-                + '<p style="font-family:' + font_list[i] + '; font-size: 36pt; line-height: 36pt;">' + settings.preview_text + '</p>'
+                '<p style="font-weight: bold">' + $(font_list[i]).val() + '</p>'
+                + '<p style="font-family:' + $(font_list[i]).val() + '; font-size: 36pt; line-height: 36pt; font-weight: ' + font_weight + '; font-style: ' + font_style + ';">' + settings.preview_text + '</p>'
             );
 
             // Since the Woo framework does not load the fonts in the admin section until needed, 
             // we will load them through AJAX.
-            $('head').append('<link href="' + settings.google_base_url + escape(font_list[i]) + '" rel="stylesheet" type="text/css">');
+            $('head').append('<link href="' + settings.google_base_url + escape($(font_list[i]).val()) + $(font_list[i]).attr('variants') + '" rel="stylesheet" type="text/css">');
         }
     }
 

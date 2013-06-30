@@ -26,6 +26,18 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     public $current_google_fonts = null;
 
+    public $font_weights = array(
+        '100' => 'Ultra-light',
+        '200' => 'Light',
+        '300' => 'Book/Thin',
+        '400' => 'Normal/Regular',
+        '500' => 'Medium',
+        '600' => 'Semi-bold',
+        '700' => 'Bold',
+        '800' => 'Extra-bold',
+        '900' => 'Ultra-bold',
+    );
+
     public function init()
     {
         // Add the missing fonts in the admin page.
@@ -161,7 +173,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // List of added fonts (read-only).
         add_settings_field(
             self::settings_field_new_fonts,
-            __('New fonts available and used'),
+            __('All Google Webfonts'),
             array($this, self::settings_field_new_fonts . 'Field'),
             self::settings_page,
             self::settings_section_id
@@ -271,7 +283,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         if (empty($this->old_woo_google_fonts)) {
             _e('No framework fonts found');
         } else {
-            echo '<select name="' . self::settings_field_old_fonts . '" multiple="multiple" size="10" class="' . self::settings_field_select_class . '">';
+            echo '<select name="' . self::settings_field_old_fonts . '" multiple="multiple" size="10" class="' . self::settings_field_select_class . ' old-fonts">';
 
             $i = 1;
             foreach($this->old_woo_google_fonts as $font) {
@@ -294,13 +306,15 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     public function newFontsField() {
         $used_fonts = $this->fontsUsedInTheme();
 
-        echo '<select name="' . self::settings_field_new_fonts . '" multiple="multiple" size="10" class="' . self::settings_field_select_class . '">';
+        echo '<select name="' . self::settings_field_new_fonts . '" multiple="multiple" size="10" class="' . self::settings_field_select_class . ' new-fonts">';
 
         $i = 1;
         foreach($this->current_google_fonts as $name => $variants) {
             $selected = (isset($used_fonts[$name])) ? ' selected="selected"' : '';
 
-            echo '<option value="'. htmlspecialchars($name) .'"' . $selected . '>' 
+            echo '<option value="'. htmlspecialchars($name) .'"' . $selected
+                . ' variants=":' . htmlspecialchars(implode(',', $variants)) . '"'
+                . '>' 
                 . htmlspecialchars($name)
                 . (!empty($variants) ? ' (' . implode(', ', $this->expandGoogleVariants($variants)) . ')' : '')
                 . '</option>';
@@ -318,7 +332,17 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // Here provide the preview.
         //
 
-        echo '<p><input type="submit" id="preview-fonts" value="' . __('Preview Fonts') . '" onClick="jQuery().gwfwFontPreview({clear: true}); return false;" /></p>';
+        echo '<p>';
+        echo '<input type="submit" id="preview-fonts" value="' . __('Preview Fonts') . '" onClick="jQuery().gwfwFontPreview({clear: true}); return false;" />';
+        echo ' <input type="checkbox" value="1" id="preview-italic" name="preview-italic" />';
+        echo ' <label for="preview-italic">' . __('Preview italic style') . '</label>';
+        echo ' <select name="preview-weight" id="preview-weight">';
+        foreach($this->font_weights as $code => $name) {
+            $selected = ( $code == '400' ? ' selected="selected"' : '');
+            echo '<option value="' . $code . '"' . $selected . '>' . $code . ': ' . $name . '</option>';
+        }
+        echo ' </select>';
+        echo '</p>';
 
         wp_enqueue_script(
             'preview-fonts',
