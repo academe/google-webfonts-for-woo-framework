@@ -68,6 +68,13 @@ If you have used, or are using, those plugins too, then the API key setting will
 Some hosts may not be set up to allow your site to fetch data from remote sites. Please report any 
 such errors on the plugin page or github, and we will try looking for a workaround.
 
+= Can I use the new fonts in a page body? =
+
+Yes. WooThemes themes provides a short-code tag that allows you to embed any font in the body of a page or ppst.
+However, the list of fonts that the short-code quick-create function inb the content editor provides, will not
+be the full list of all fonts. So work around this, just select any random font, then change the name of the
+font manually in the short-code tag.
+
 == Screenshots ==
 
 1. 
