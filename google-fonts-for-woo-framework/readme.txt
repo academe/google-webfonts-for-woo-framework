@@ -84,7 +84,7 @@ font manually in the short-code tag.
 
 = Version 1.2.0 =
 * Introduction of fallback list of fonts when Google cannot be contacted for any reason.
-* Cache is no incdefinite; it is refreshed only when saving the settings page.
+* Cache is now indefinite; it is refreshed only when saving the settings page.
 * The list of fonts from Google completely replaces the list in the Woo Framework, rather than merging in.
 * The font list shown on the settings page shows the available variants more clearly.
 * The font preview function supports italic style and the main font weights (nine weights from 100 to 900).
