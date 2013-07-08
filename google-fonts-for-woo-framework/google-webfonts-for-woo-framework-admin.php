@@ -26,6 +26,8 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     public $current_google_fonts = null;
 
+    // The common-use English translation of variant weights.
+    // These may need to be translated.
     public $font_weights = array(
         '100' => 'Ultra-light',
         '200' => 'Light',
@@ -187,7 +189,6 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             self::settings_page,
             self::settings_section_id
         );
-
     }
 
     /**
@@ -198,7 +199,11 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     {
         echo '<p>' . __('Google Webfonts for WooThemes Woo Framework. All fonts listed here are available to the theme.') . '</p>';
         echo '<p>' . __('Fonts shown selected here have been used in the theme.') . '</p>';
-        echo '<p>' . __('To preview any fonts, select the fonts from either list and press the preview button..') . '</p>';
+        echo '<p>';
+        echo __('To preview any fonts, select the fonts from either list and press the preview button.');
+        echo __(' A font shown with a weight "+italic" is a weight that has separate variants for the italicized and non-italicized styles.');
+        echo __(' Previews will display Google variants where available; the browser will make its own decision on how to display styles and weights where variants are not available.');
+        echo '</p>';
     }
 
     //
@@ -321,7 +326,76 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         }
 
         echo '</select> (' . count($this->current_google_fonts) . ')';
+
+        // Optionally list the fonts as an encoded JSON file.
+        // Trigger this code by putting "&export=1" on the end of the plugin settins page URL.
+        if (!empty($_GET['export'])) {
+            echo '<p>' . __('Encoded list of fonts to update fonts.json') . '</p>';
+            echo '<textarea rows="20" cols="40">';
+            echo $this->prettyPrintJson(json_encode($this->current_google_fonts));
+            echo '</textarea>';
+        }
     }
+
+    /**
+     * Indents a flat JSON string to make it more human-readable. See:
+     * http://www.daveperrett.com/articles/2008/03/11/format-json-with-php/
+     *
+     * @param string $json The original JSON string to process.
+     *
+     * @return string Indented version of the original JSON string.
+     */
+    function prettyPrintJson($json) {
+
+        $result      = '';
+        $pos         = 0;
+        $strLen      = strlen($json);
+        $indentStr   = '  ';
+        $newLine     = "\n";
+        $prevChar    = '';
+        $outOfQuotes = true;
+
+        for ($i=0; $i<=$strLen; $i++) {
+
+            // Grab the next character in the string.
+            $char = substr($json, $i, 1);
+
+            // Are we inside a quoted string?
+            if ($char == '"' && $prevChar != '\\') {
+                $outOfQuotes = !$outOfQuotes;
+
+            // If this character is the end of an element,
+            // output a new line and indent the next line.
+            } else if(($char == '}' || $char == ']') && $outOfQuotes) {
+                $result .= $newLine;
+                $pos --;
+                for ($j=0; $j<$pos; $j++) {
+                    $result .= $indentStr;
+                }
+            }
+
+            // Add the character to the result string.
+            $result .= $char;
+
+            // If the last character was the beginning of an element,
+            // output a new line and indent the next line.
+            if (($char == ',' || $char == '{' || $char == '[') && $outOfQuotes) {
+                $result .= $newLine;
+                if ($char == '{' || $char == '[') {
+                    $pos ++;
+                }
+
+                for ($j = 0; $j < $pos; $j++) {
+                    $result .= $indentStr;
+                }
+            }
+
+            $prevChar = $char;
+        }
+
+        return $result;
+    }
+
 
     /**
      * Preview any selected fonts.
@@ -480,6 +554,8 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             // Every list of font weights have different mappings, so beware this is
             // not an exact science.
 
+            // Simplify the data a little for storage, and make it more consistent.
+
             foreach($variants as $vkey => $vname) {
                 if ($vname == 'regular') $variants[$vkey] = '400';
                 if ($vname == 'italic') {
@@ -502,7 +578,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     /**
      * Get the full list of fonts from Google.
      * TODO: allow the variants to be restricted to a smaller set than is available.
-     * For example, Ultrabold (900) is not available in any Canvas, so there is no point loading it.
+     * For example, Ultrabold (900) is not available in Canvas, so there is no point loading it.
      */
 
     public function getGoogleFonts()
