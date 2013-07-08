@@ -4,7 +4,7 @@ Donate link:
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,8 +17,8 @@ The purpose of this plugin is to make all available Google webfonts available to
 It works like this:
 
 1. You register for a Google API key, and make sure it is enabled for web fonts. Set the API key in the plugin settings menu.
-2. The key is used to download the full list of Google web fonts. This is cached locally, every twelve hours at present.
-3. The full list of fonts is merged into the list that the Woo framework already knows about.
+2. The key is used to download the full list of Google web fonts. This is cached locally, and will only be refreshed when you save the plugin settings page.
+3. The full list of fonts and all variants replaces the list that the Woo framework defines internally.
 
 What you should then see, is the ability to select any available Google web font in the WooThemes theme administration pages, and have those fonts displayed in your theme.
 
@@ -41,6 +41,13 @@ Please let me know how this plugin works for you, whether you like it, and how i
 1. Add your Google API key to the settings page for the plugin.
 
 == Frequently asked questions ==
+
+= What if I don't have a Google API key? =
+
+No problem! From version 1.2.0 this plugin carries a list of fonts and variants as a fall-back. If the API key is not
+entered or the API key is invalid, then the plugin will use the fallback list. This list initially contains 652 fonts
+but will slowly get out of date as Google extends its fonts. It will be refreshed on each new version of the plugin
+however.
 
 = Where do I get a Google API key? =
 
@@ -67,6 +74,13 @@ such errors on the plugin page or github, and we will try looking for a workarou
 2. 
 
 == Changelog ==
+
+= Version 1.2.0 =
+* Introduction of fallback list of fonts when Google cannot be contacted for any reason.
+* Cache is no incdefinite; it is refreshed only when saving the settings page.
+* The list of fonts from Google completely replaces the list in the Woo Framework, rather than merging in.
+* The font list shown on the settings page shows the available variants more clearly.
+* The font preview function supports italic style and the main font weights (nine weights from 100 to 900).
 
 = Version 1.1.0 =
 * Reports errors fetching Google fonts.
