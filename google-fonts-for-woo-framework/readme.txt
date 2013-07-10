@@ -88,6 +88,14 @@ in your design. That way you will get a font that has been carefully designed fo
 The settings page allows you to preview specific variants of each font, as well as the standard core font
 (generally normal/non-italic, and regular/400-weight).
 
+= Is it just Google Webfonts? =
+
+For now, yes it is. The Woo Framework is designed to pull in external webfonts from Google only at present.
+
+There are plans to extend this to other sources of web-based fonts, with the risk that it may be a little 
+ess robust when it comes to theme updates from WooThemes. However, that will likely be a separate plugin;
+this plugin will continue to support just Google Webfonts.
+
 == Screenshots ==
 
 1. 
