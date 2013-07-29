@@ -1,6 +1,6 @@
 === Google Webfonts For Woo Framework ===
 Contributors: judgej
-Donate link: 
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B4STZL8F5WHK6
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 3.5.1
@@ -70,10 +70,31 @@ such errors on the plugin page or github, and we will try looking for a workarou
 
 = Can I use the new fonts in a page body? =
 
-Yes. WooThemes themes provides a short-code tag that allows you to embed any font in the body of a page or ppst.
-However, the list of fonts that the short-code quick-create function inb the content editor provides, will not
-be the full list of all fonts. So work around this, just select any random font, then change the name of the
-font manually in the short-code tag.
+Yes, you can. WooThemes themes provides a short-code tag that allows you to embed any font in the body of a page or post.
+However, the list of fonts that the short-code quick-create function that the content editor provides, will not
+include the full list of fonts. To work around this, just select any random font to create a short-code tag,
+then change the name of the font manually in that tag. The theme will load that font automatically when you display
+the page or post.
+
+= Tell me about variants. What are they? =
+
+Many Google Webfonts come with variants, and these are listed against each font in the plugin settings page.
+A variant is another version font from the same font family, that is used for displaying a different style
+or weight. Where a variant does not exist, for example if there is no "italic" variant, the web browser will
+fake it and make a best guess of what it would look like. This is not ideal from a design perspective.
+So where possible, use fonts that have variants listed that cover the styles and weights that you want to use
+in your design. That way you will get a font that has been carefully designed for that purpose.
+
+The settings page allows you to preview specific variants of each font, as well as the standard core font
+(generally normal/non-italic, and regular/400-weight).
+
+= Is it just Google Webfonts? =
+
+For now, yes it is. The Woo Framework is designed to pull in external webfonts from Google only at present.
+
+There are plans to extend this to other sources of web-based fonts, with the risk that it may be a little 
+ess robust when it comes to theme updates from WooThemes. However, that will likely be a separate plugin;
+this plugin will continue to support just Google Webfonts.
 
 == Screenshots ==
 
