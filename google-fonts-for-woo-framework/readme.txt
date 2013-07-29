@@ -106,6 +106,9 @@ this plugin will continue to support just Google Webfonts.
 = Version 1.2.2 =
 * Fixed bug that caused failure in fallback fonts to load.
 
+= Version 1.2.1 =
+* Version tags corrected, but otherwise same as 1.2.0
+
 = Version 1.2.0 =
 * Introduction of fallback list of fonts when Google cannot be contacted for any reason.
 * Cache is now indefinite; it is refreshed only when saving the settings page.
