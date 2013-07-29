@@ -6,7 +6,7 @@
 Plugin Name: Google Webfonts For Woo Framework
 Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
 Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
-Version: 1.2.1
+Version: 1.2.2
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -35,15 +35,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 function GoogleWebfontsForWooFramework_activation()
 {
+    // If no api key option exists, then create a blank one now.
     $google_api_key = get_option('google_api_key');
     if ($google_api_key === false) {
         add_option('google_api_key', '', false, true);
     }
+
+    // If fonts have previously been cached (in an earlier version) then the cache
+    // may have an expiration. If so, refresh the cache now without an expiration.
+    $fonts = get_transient($GWFC_OBJ->trans_cache_name);
+    if (empty($fonts)) $fonts = $GWFC_OBJ->getFallbackFonts();
+    if (!empty($fonts)) set_transient($GWFC_OBJ->trans_cache_name, $fonts);
 }
 register_activation_hook(__FILE__, 'GoogleWebfontsForWooFramework_activation');
 
 // Set the main plugin as a global object.
-// There is a standard visitor version and an admin extended version.
+// There is a standard visitor version and an extended admin version.
 if (is_admin()) {
     require(dirname(__FILE__) . '/google-webfonts-for-woo-framework-admin.php');
     $GWFC_OBJ = new GoogleWebfontsForWooFrameworkAdmin();
@@ -162,7 +169,7 @@ class GoogleWebfontsForWooFramework
         $font_data = $this->getFallbackFontData();
         $woo_fonts = array();
 
-        if ( ! empty($font_date)) {
+        if ( ! empty($font_data)) {
             foreach($font_data as $family => $variants) {
                 $woo_fonts[] = array(
                     'name' => $family,
