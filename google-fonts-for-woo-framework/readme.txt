@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 3.5.1
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,9 @@ this plugin will continue to support just Google Webfonts.
 2. 
 
 == Changelog ==
+
+= Version 1.2.3 =
+* Check for missing object during activation, to skip warning.
 
 = Version 1.2.2 =
 * Fixed bug that caused failure in fallback fonts to load.
