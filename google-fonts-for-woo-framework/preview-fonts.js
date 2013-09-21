@@ -6,12 +6,14 @@ jQuery.fn.gwfwFontPreview = (function(options) {
         font_selector_class: 'font-selector',
         preview_text: {
             // See http://stackoverflow.com/questions/18931489/google-webfont-subset-sample-strings
-            'latin': 'The quick brown fox jumps over the lazy dog.',
-            'latin-ext': '',
-            'greek-ext': '',
-            'greek-ext': '',
-            'cyrillic-ext': '',
-            'cyrillic-ext': ''
+            'latin': 'Grumpy wizards make toxic brew for the evil Queen and Jack',
+            'latin-ext': 'ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘ...',
+            'greek': 'Τάχιστη αλώπηξ βαφής ψημένη γη, δρασκελίζει υπέρ νωθρού κυνός',
+            'greek-ext': 'ἀἁἂἃἄἅἆἇἈἉἊἋἌἍἎἏἑἒἓἔἕἘἙἚἛἜἝἠἡἢἣἤἥἦἧ',
+            'cyrillic': 'В чащах юга жил бы цитрус? Да, но фальшивый экземпляр!',
+            'cyrillic-ext': 'ꙢꙣꙤꙥꙦꙧꙨꙩꙪꙫꙬꙭꙮ',
+            'khmer': 'ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា',
+            'vietnamese': 'Tôi có thể ăn thủy tinh mà không hại gì.'
         },
         google_base_url: 'http://fonts.googleapis.com/css?family=',
         subset_field_class: 'gwfc_google_webfont_subset_select'
@@ -31,7 +33,7 @@ jQuery.fn.gwfwFontPreview = (function(options) {
     // all the selected fonts so we have a full list.
     $('#' + settings.form_id + ' select.' + settings.font_selector_class + '.new-fonts :selected')
         .each(function(i){
-            font_list.push(this); //.val()
+            font_list.push(this);
         });
     ;
 
@@ -58,7 +60,11 @@ jQuery.fn.gwfwFontPreview = (function(options) {
         var preview_text = '';
         for(var j = 0; j < subset_list.length; j++) {
             if (typeof settings.preview_text[subset_list[j]] != "undefined") {
-                preview_text = preview_text + '<span title="subset: ' + subset_list[j] + '">' + settings.preview_text[subset_list[j]] + '</span> ';
+                preview_text = preview_text
+                    + '<span title="Subset '
+                    + subset_list[j] + '">'
+                    + settings.preview_text[subset_list[j]]
+                    + '</span><br />';
             }
         }
 
@@ -75,7 +81,14 @@ jQuery.fn.gwfwFontPreview = (function(options) {
 
             // Since the Woo framework does not load the fonts in the admin section until needed, 
             // we will load them through AJAX.
-            $('head').append('<link href="' + settings.google_base_url + escape($(font_list[i]).val()) + $(font_list[i]).attr('variants') + '&amp;subset=' + subset_list.join(',') + '" rel="stylesheet" type="text/css">');
+            $('head').append(
+                '<link href="'
+                + settings.google_base_url
+                + escape($(font_list[i]).val())
+                + $(font_list[i]).attr('variants')
+                + '&amp;subset=' + subset_list.join(',')
+                + '" rel="stylesheet" type="text/css">'
+            );
         }
     }
 
