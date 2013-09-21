@@ -6,7 +6,7 @@
 Plugin Name: Google Webfonts For Woo Framework
 Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
 Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
-Version: 1.2.3
+Version: 1.3.1
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -66,6 +66,51 @@ if (is_admin()) {
 
 $GWFC_OBJ->init();
 
+// Here we override the function that the Woo Framework uses to put the fonts into
+// the page head. We do this as early as we can, to get it in before other Woo plugins
+// and themes. However, we only need to do this if we are using subsets any other then
+// 'latin'.
+
+if ( ! function_exists( 'woo_google_webfonts' ) && $GWFC_OBJ->font_subsets != 'latin' ) {
+    function woo_google_webfonts() {
+        global $google_fonts;
+        global $GWFC_OBJ;
+        $fonts = '';
+        $output = '';
+
+        // Setup Woo Options array
+        global $woo_options;
+
+        // Go through the options
+        if ( !empty($woo_options) ) {
+
+            $fonts_used = array();
+            foreach ( $woo_options as $option ) {
+                if ( is_array($option) && isset($option['face']) ) $fonts_used[$option['face']] = $option['face'];
+            }
+            foreach ($google_fonts as $font) {
+                if (isset($fonts_used[$font['name']])) $fonts .= $font['name'] . $font['variant'] . "|";
+            }
+
+            // Output google font css in header
+            if ( $fonts ) {
+                $fonts = str_replace( " ", "+", $fonts );
+                $output .= "\n<!-- Google Webfonts (for subsets: $GWFC_OBJ->font_subsets) -->\n";
+                $output .= '<link href="http'
+                    . ( is_ssl() ? 's' : '' )
+                    .'://fonts.googleapis.com/css?family='
+                    . trim($fonts, '|')
+                    . '&amp;subset=' . $GWFC_OBJ->font_subsets
+                    . '" rel="stylesheet" type="text/css" />'
+                    . "\n";
+
+                echo $output;
+            }
+        }
+    } // End woo_google_webfonts()
+}
+
+
 class GoogleWebfontsForWooFramework
 {
     // The name of the cahce for the the fonts.
@@ -81,12 +126,23 @@ class GoogleWebfontsForWooFramework
     // Admin notice text.
     public $admin_notice = '';
 
+    // The current subsets selected for the site, comma-separated.
+    public $font_subsets = 'latin';
+
+    // The name of the option to store the subset(s) selected for the site.
+    public $subset_option_name = 'gwfc_google_webfont_subset';
+
     // Initilialise the plugin.
     public function init() {
         // Add the missing fonts to the non-admin pages too.
         // It needs to be an early action (5) to get in before the theme hook
         // that uses the font list.
         add_action('wp_head', array($this, 'action_set_fonts'), 5);
+
+        // TODO: Get the font_subsets that have been chosen.
+        $subset = get_option($this->subset_option_name, 'latin');
+        if (empty($subset)) $subset= 'latin';
+        $this->font_subsets = $subset;
     }
 
     /**
