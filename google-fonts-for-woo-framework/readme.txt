@@ -96,6 +96,25 @@ There are plans to extend this to other sources of web-based fonts, with the ris
 ess robust when it comes to theme updates from WooThemes. However, that will likely be a separate plugin;
 this plugin will continue to support just Google Webfonts.
 
+= How can I get a list of Google fonts this plugin recognises? =
+
+If you do not supply a valid API key, this plugin will fall back to the fonts listed in fonts.json
+To get an updated list of fonts for that file, make sure you have a valid API key then add this
+parameter to the end of the settings page for this plugin:
+
+    export=1
+
+Your URL will look like this:
+
+    http://yoursite.example.com/wp-admin/options-general.php?page=gw-for-wooframework&export=1
+
+This will then list all the fonts and their variants downloaded from the Google API in the same
+format that fonts.json uses. There is no API at this time for fetching the subsets (latin, greek etc) or font
+classes (serif, sans serif, handwriting, etc), so that information is not included. However, if you are 
+interested in those details, I'm trying to keep an updated list here:
+
+https://github.com/academe/GoogleFontMetadata
+
 == Screenshots ==
 
 1. 
