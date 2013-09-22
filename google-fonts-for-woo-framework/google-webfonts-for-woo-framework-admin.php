@@ -238,9 +238,13 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         echo '<p>' . __('Google Webfonts for WooThemes Woo Framework. All fonts listed here are available to the theme.') . '</p>';
         echo '<p>' . __('Fonts shown selected here have been used in the theme.') . '</p>';
         echo '<p>';
-        echo __('To preview any fonts, select the fonts from either list and press the preview button.');
-        echo __(' A font shown with a weight "+italic" is a weight that has separate variants for the italicized and non-italicized styles.');
-        echo __(' Previews will display Google variants where available; the browser will make its own decision on how to display styles and weights where variants are not available.');
+        echo __('To preview any fonts, select the fonts from the "All Google Webfonts" list and press the preview button.');
+        echo " ";
+        echo __('A font shown with a weight "+italic" is a weight that has separate variants for the italicized and non-italicized styles.');
+        echo " ";
+        echo __('Previews will display Google variants where available; the browser will make its own decision on how to display styles and weights where variants are not available.');
+        echo " ";
+        echo __('The previews will also make an attempt to display character glyphs that are only available to the subsets selected.');
         echo '</p>';
     }
 
