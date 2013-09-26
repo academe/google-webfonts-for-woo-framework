@@ -2,6 +2,7 @@
 
 This is a plugin for WordPress. Its purpose is to pull all Google webfonts into the WooThemes Canvas
 plugin - or any other plugin that uses the WooThemes framework - through the Google Developer API.
+Also additional subsets (sets of international glyphs) can be selected for all loaded fonts.
 
 # Installation
 
@@ -18,8 +19,9 @@ The "releases" directory holds released zip files for convenience. The latest re
 # Notes
 
 You will need a Google Developer API Key to get access to the list of fonts that Google supplies. The plugin
-has a settings page that allows you to enter the API key. The plugin will refresh its list of fonts every
-twelve hours at present, so there will be up to two hits on the Google API each day.
+has a settings page that allows you to enter the API key. The plugin will refresh its list of fonts only
+when entering the settings page. If no valid API key is set in the plugin, then it will fall back to a
+fonts.json file that is refreshed each time this plugin is released.
 
 The Google Developer API Key can be obtained for free here:
 

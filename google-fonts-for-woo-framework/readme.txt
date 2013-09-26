@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 3.6.1
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,9 @@ Give the WooThemes framework access to the full range of current Google Webfonts
 
 == Description ==
 
-The purpose of this plugin is to make all available Google webfonts available to the WooThemes Canvas theme, and any other themes that use the WooThemes framework.
+The purpose of this plugin is to make all available Google webfonts available to the WooThemes Canvas theme,
+and any other themes that use the WooThemes framework. It also allows additional selected international subsets
+(Greek, Cyrillic, Vietnamese etc.) to loaded, which the Woo Framework does not support at present.
 
 It works like this:
 
@@ -22,15 +24,19 @@ It works like this:
 
 What you should then see, is the ability to select any available Google web font in the WooThemes theme administration pages, and have those fonts displayed in your theme.
 
-Register for a Google API key, and turn on "webfonts" for the key here:
+To get the absolute latest fonts from Google, register for a Google API key, and turn on the "webfonts" API for that key here:
 
 [http://code.google.com/apis/console](http://code.google.com/apis/console)
+
+However, this plugin has a fallback list of fonts, so you can try it out without an API key, and that might even be
+good enough for your purposes.
 
 This plugin has been tested against PHP5.3 and the project repository is here:
 
 [https://github.com/academe/google-webfonts-for-woo-framework/](https://github.com/academe/google-webfonts-for-woo-framework/)
 
-Changes have been made so that it works with PHP5.2 and has been reported as working. However, I work underat least 5.3 so some incompatibilities may creep in by accident from time-to-time - just report them and I will do my best to fix as quickly as possible.
+Changes have been made so that it works with PHP5.2 and has been reported as working.
+However, I work under at least 5.3 so some incompatibilities may creep in by accident from time-to-time - just report them and I will do my best to fix as quickly as possible.
 
 Please let me know how this plugin works for you, whether you like it, and how it can be improved.
 
@@ -122,7 +128,10 @@ https://github.com/academe/GoogleFontMetadata
 
 == Changelog ==
 
-= Version 1.3.1 =
+= Version 1.3.2 =
+* An official release of 1.3.1 with some minor text amendments.
+
+= Version 1.3.1 (beta) =
 * Support Google's international subsets. Select which subsets you want to load for all used fonts.
 
 = Version 1.2.3 =
