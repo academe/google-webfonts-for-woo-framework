@@ -69,7 +69,7 @@ Feel free to raise issues there and make pull requests, as well as in the normal
 The option used to store your API key shares it name with several other popular Google Webfonts plugins.
 If you have used, or are using, those plugins too, then the API key setting will be shared. This is by design.
 
-= I see errors reported when fetching the nerw Google webfonts =
+= I see errors reported when fetching the new Google webfonts =
 
 Some hosts may not be set up to allow your site to fetch data from remote sites. Please report any 
 such errors on the plugin page or github, and we will try looking for a workaround.
