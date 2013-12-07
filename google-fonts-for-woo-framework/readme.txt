@@ -57,7 +57,7 @@ however.
 
 = Where do I get a Google API key? =
 
-A Google API key can be obtained here: http://code.google.com/apis/console
+A Google API key can be obtained here: https://cloud.google.com/console?redirected=true
 
 = How can I contribute to this plugin? =
 
