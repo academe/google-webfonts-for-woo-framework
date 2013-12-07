@@ -25,11 +25,14 @@ fonts.json file that is refreshed each time this plugin is released.
 
 The Google Developer API Key can be obtained for free here:
 
-http://code.google.com/apis/console
+https://cloud.google.com/console?redirected=true
 
 Some simple steps for obtaining the key are shown here:
 
 http://code.garyjones.co.uk/google-developer-api-key
+
+Note that Gary Jones' website may be slightly out-of-date now that the Googe console has moved. The web is full 
+of moving targets these days, and articles get old quickly. But check it out anyway.
 
 The code is styled more to PSR-1/PSR-2 than to the standard WordPress format. It's just a personal
 preference, and that's the way it is.
