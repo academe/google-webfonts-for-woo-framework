@@ -31,15 +31,15 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     // The common-use English translation of variant weights.
     // These may need to be translated.
     public $font_weights = array(
-        '100' => 'Ultra-light',
-        '200' => 'Light',
-        '300' => 'Book/Thin',
+        '100' => 'Ultra-light (Google: Thin)',
+        '200' => 'Light (Google: Extra-Light)',
+        '300' => 'Thin (Google: Light)',
         '400' => 'Normal/Regular',
         '500' => 'Medium',
-        '600' => 'Semi-bold',
+        '600' => 'Semi-Bold',
         '700' => 'Bold',
-        '800' => 'Extra-bold',
-        '900' => 'Ultra-bold',
+        '800' => 'Extra-Bold',
+        '900' => 'Ultra-Bold',
     );
 
     // The list of subsets that are (or will be) available from Google.
@@ -471,8 +471,9 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         echo ' <label for="preview-italic">' . __('Preview italic style') . '</label>';
         echo ' <select name="preview-weight" id="preview-weight">';
         foreach($this->font_weights as $code => $name) {
-            $selected = ( $code == '400' ? ' selected="selected"' : '');
-            echo '<option value="' . $code . '"' . $selected . '>' . $code . ': ' . $name . '</option>';
+            $selected = ($code == '400' ? ' selected="selected"' : '');
+            $style = ($code == '400' || $code == '700' || $code == '300' ? 'style="font-weight: bold; color: #006600;"' : '');
+            echo '<option ' . $style . ' value="' . $code . '"' . $selected . '>' . $code . ': ' . $name . '</option>';
         }
         echo ' </select>';
         echo '</p>';
