@@ -26,10 +26,13 @@ What you should then see, is the ability to select any available Google web font
 
 To get the absolute latest fonts from Google, register for a Google API key, and turn on the "webfonts" API for that key here:
 
-[http://code.google.com/apis/console](http://code.google.com/apis/console)
+[https://cloud.google.com/console](https://cloud.google.com/console)
 
-However, this plugin has a fallback list of fonts, so you can try it out without an API key, and that might even be
-good enough for your purposes.
+You first create a project (call it "Fonts API" or something like that, so you remember what the project was for).
+Then you add an API key to the project, then switch on the "Web Fonts Developer API" service for that API.
+
+*However*, this plugin has a fallback list of fonts, so you can try it out without an API key, and that might even be
+good enough for your purposes. So you don't need to get technical to get started.
 
 This plugin has been tested against PHP5.3 and the project repository is here:
 
@@ -128,8 +131,11 @@ https://github.com/academe/GoogleFontMetadata
 
 == Changelog ==
 
+= Version 1.3.4 =
+* Updated URL and instructions for the Google webfonts console (to get an API key).
+
 = Version 1.3.3 =
-* New fontsin fallback  list: Alegreya Sans, Alegreya Sans SC, Exo 2, Kantumruy, Kdam Thmor plus "normal" weight for Sniglet.
+* New fonts in fallback list: Alegreya Sans, Alegreya Sans SC, Exo 2, Kantumruy, Kdam Thmor plus "normal" weight for Sniglet.
 
 = Version 1.3.2 =
 * An official release of 1.3.1 with some minor text amendments.
