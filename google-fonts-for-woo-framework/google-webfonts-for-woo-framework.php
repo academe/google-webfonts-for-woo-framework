@@ -70,8 +70,9 @@ $GWFC_OBJ->init();
 // the page head. We do this as early as we can, to get it in before other Woo plugins
 // and themes. However, we only need to do this if we are using subsets any other then
 // 'latin'.
+// Since we are now always restricting the weights now, this alternative font loader is always run.
 
-if ( ! function_exists( 'woo_google_webfonts' ) && $GWFC_OBJ->font_subsets != 'latin' ) {
+if ( ! function_exists( 'woo_google_webfonts' ) && (true || $GWFC_OBJ->font_subsets != 'latin' || $GWFC_OBJ->font_weights != implode(',', $GWFC_OBJ->default_weights))) {
     function woo_google_webfonts() {
         global $google_fonts;
         global $GWFC_OBJ;
@@ -84,18 +85,38 @@ if ( ! function_exists( 'woo_google_webfonts' ) && $GWFC_OBJ->font_subsets != 'l
         // Go through the options
         if ( !empty($woo_options) ) {
 
+            // Get the abbreviated font weights that have been selected by the admin.
+            $selected_font_weights = explode(',', $GWFC_OBJ->abbreviateVariants($GWFC_OBJ->font_weights));
+
+            // Add on italic variants for each of the selected font weights.
+            $selected_font_weights_i = array();
+            foreach($selected_font_weights as $selected_font_weight) {
+                $selected_font_weights_i[] = $selected_font_weight . 'i';
+            }
+            $selected_font_weights = array_merge($selected_font_weights, $selected_font_weights_i);
+
             $fonts_used = array();
             foreach ( $woo_options as $option ) {
                 if ( is_array($option) && isset($option['face']) ) $fonts_used[$option['face']] = $option['face'];
             }
+
             foreach ($google_fonts as $font) {
-                if (isset($fonts_used[$font['name']])) $fonts .= $font['name'] . $font['variant'] . "|";
+                if (isset($fonts_used[$font['name']])) {
+                    // Filter each list of variants to just the subset that has been selected.
+                    $variants = explode(',', ltrim($font['variant'], ':'));
+                    $variants = array_intersect($variants, $selected_font_weights);
+
+                    // If there are no variants for this font, then skip it completely.
+                    if (empty($variants)) continue;
+
+                    $fonts .= $font['name'] . ':' . implode(',', $variants) . "|";
+                }
             }
 
             // Output google font css in header
             if ( $fonts ) {
                 $fonts = str_replace( " ", "+", $fonts );
-                $output .= "\n<!-- Google Webfonts (for subsets: $GWFC_OBJ->font_subsets) -->\n";
+                $output .= "\n<!-- Google Webfonts (for subsets: $GWFC_OBJ->font_subsets and weights: " .implode(',', $selected_font_weights). ") -->\n";
                 $output .= '<link href="http'
                     . ( is_ssl() ? 's' : '' )
                     .'://fonts.googleapis.com/css?family='
@@ -132,6 +153,12 @@ class GoogleWebfontsForWooFramework
     // The name of the option to store the subset(s) selected for the site.
     public $subset_option_name = 'gwfc_google_webfont_subset';
 
+    // The name of the option to store the weights selected for the site.
+    public $weight_option_name = 'gwfc_google_webfont_weight';
+
+    // The default weights, until alternatives are selected.
+    public $default_weights = array('300', '400', '700');
+
     // Initilialise the plugin.
     public function init() {
         // Add the missing fonts to the non-admin pages too.
@@ -139,10 +166,15 @@ class GoogleWebfontsForWooFramework
         // that uses the font list.
         add_action('wp_head', array($this, 'action_set_fonts'), 5);
 
-        // TODO: Get the font_subsets that have been chosen.
+        // Get the font subsets that have been chosen.
         $subset = get_option($this->subset_option_name, 'latin');
-        if (empty($subset)) $subset= 'latin';
+        if (empty($subset)) $subset = 'latin';
         $this->font_subsets = $subset;
+
+        // Get the font weights that have been chosen.
+        $weight = get_option($this->weight_option_name, implode(',', $this->default_weights));
+        if (empty($weight)) $weight = implode(',', $this->default_weights);
+        $this->font_weights = $weight;
     }
 
     /**

@@ -18,8 +18,10 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     const settings_form_id = 'gwfc_settings_form';
     const settings_field_api_key = 'googleApiKey';
     const settings_field_font_subset = 'fontSubset';
+    const settings_field_font_weight = 'fontWeight';
     const settings_option_api_key = 'google_api_key';
     const settings_option_font_subset = 'gwfc_google_webfont_subset';
+    const settings_option_font_weight = 'gwfc_google_webfont_weight';
     const settings_field_new_fonts = 'newFonts';
     const settings_field_old_fonts = 'oldFonts';
     const settings_field_preview = 'previewFonts';
@@ -30,7 +32,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     // The common-use English translation of variant weights.
     // These may need to be translated.
-    public $font_weights = array(
+    public $all_font_weights = array(
         '100' => 'Ultra-light (Google: Thin)',
         '200' => 'Light (Google: Extra-Light)',
         '300' => 'Thin (Google: Light)',
@@ -136,6 +138,13 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
                 __('Cannot access Google Webfonts.'
                 . ' Check your API key. Using fallback font list instead.')
             );
+
+            // Display additional diagnostics if available.
+            if ( ! empty($this->admin_notice)) {
+                $this->displayAdminNotice(
+                    $this->admin_notice
+                );
+            }
         }
 
         echo '<form method="post" action="options.php" id="' . self::settings_form_id . '">';
@@ -172,6 +181,12 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             array($this, self::settings_field_font_subset . 'Validate')
         );
 
+        register_setting(
+            self::settings_group_name, 
+            self::settings_option_font_weight,
+            array($this, self::settings_field_font_weight . 'Validate')
+        );
+
         // Register a section in the page.
 
         add_settings_section(
@@ -197,6 +212,15 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             self::settings_field_font_subset,
             __('Requested font subsets'),
             array($this, self::settings_field_font_subset . 'Field'),
+            self::settings_page,
+            self::settings_section_id // section
+        );
+
+        // The font weights.
+        add_settings_field(
+            self::settings_field_font_weight,
+            __('Requested font weights'),
+            array($this, self::settings_field_font_weight . 'Field'),
             self::settings_page,
             self::settings_section_id // section
         );
@@ -279,6 +303,34 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     }
 
     /**
+     * Render the font weight input fields (checkboxes).
+     * Give the box a class 'gwfc_google_webfont_subset_select' so the font previewer can find the checked boxes.
+     */
+
+    public function fontWeightField() {
+        $option = get_option(self::settings_option_font_weight, implode(',', $this->default_weights));
+        $options = explode(',', $option);
+
+        foreach($this->all_font_weights as $value => $label) {
+            // Highlight the three default weights.
+            if (in_array($value, $this->default_weights)) echo "<strong><em>";
+
+            echo "<label for='" . self::settings_option_font_weight . "_$value'>";
+
+            $checked = (in_array($value, $options) ? "checked='checked'" : '');
+
+            // Group the weights into rows of three.
+            if ($value != '100' && ($value-100) % 300 == 0) echo "<br />";
+
+            echo "<input class='gwfc_google_webfont_weight_select' type='checkbox' id='" . self::settings_option_font_weight . "_$value' name='" . self::settings_option_font_weight . "[$value]' value='$value' $checked />";
+
+            echo "$value: $label</label>&nbsp; ";
+
+            if (in_array($value, $this->default_weights)) echo "</em></strong>";
+        }
+    }
+
+    /**
      * Expand a list of variants stored by the Woo Framework into a more friendly list.
      */
 
@@ -334,7 +386,9 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             $variants = array_merge($variants, $italics);
         }
 
-        return $variants;
+        // Remove any reference to "regular+" to help keep the lengths of the options down.
+        // e.g. "regular" would stay, but "regular+bold" would just become "bold".
+        return str_replace('regular+', '', $variants);
     }
 
     /**
@@ -470,7 +524,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         echo ' <input type="checkbox" value="1" id="preview-italic" name="preview-italic" />';
         echo ' <label for="preview-italic">' . __('Preview italic style') . '</label>';
         echo ' <select name="preview-weight" id="preview-weight">';
-        foreach($this->font_weights as $code => $name) {
+        foreach($this->all_font_weights as $code => $name) {
             $selected = ($code == '400' ? ' selected="selected"' : '');
             $style = ($code == '400' || $code == '700' || $code == '300' ? 'style="font-weight: bold; color: #006600;"' : '');
             echo '<option ' . $style . ' value="' . $code . '"' . $selected . '>' . $code . ': ' . $name . '</option>';
@@ -527,6 +581,28 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             if (empty($input)) $input = 'latin';
         } else {
             add_settings_error(self::settings_field_font_subset, 'texterror', __('Invalid selection made'), 'error');
+        }
+
+        return $input;
+    }
+
+    /**
+     * Validate the submitted fields.
+     */
+
+    public function fontWeightValidate($input) {
+        // Make sure submitted values are in the allowable list, then convert them into a string.
+
+        $all_font_weights = $this->all_font_weights;
+
+        if (is_array($input)) {
+            foreach($input as $key => $value) {
+                if (!isset($all_font_weights[$key])) unset($input[$key]);
+            }
+            $input = implode(',', array_keys($input));
+            if (empty($input)) $input = 'latin';
+        } else {
+            add_settings_error(self::settings_field_font_weight, 'texterror', __('Invalid selection made'), 'error');
         }
 
         return $input;
@@ -613,7 +689,17 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // At this point we could try deciphering the error messages that Google returns,
         // but they are complex structures and the cost/benefit is probably not worth it.
 
-        if (empty($font_list) || !is_array($font_list)) return $font_list;
+        if (empty($font_list) || !is_array($font_list)) {
+            $errors = json_decode($api_data['body'], true);
+            if (isset($errors['error']['errors'][0]) && is_array($errors['error']['errors'][0])) {
+                $error_details = array();
+                foreach($errors['error']['errors'][0] as $k => $v) {
+                    $error_details[] = "$k: $v";
+                }
+                $this->admin_notice = implode('; ', $error_details);
+            }
+            return $font_list;
+        }
 
         $fonts = array();
         foreach($font_list['items'] as $font) {
@@ -626,7 +712,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             // Font weights are (as defined by Google's font overview pages):
             //  100 ultra-light
             //  200 light
-            //  300 book (Woo Framework calls this "thin")
+            //  300 book (Woo Framework calls this "thin", Google calls this "light")
             //  400 normal
             //  500 medium
             //  600 semi-bold
