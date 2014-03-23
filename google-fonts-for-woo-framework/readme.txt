@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 3.8.0
-Stable tag: 1.3.4
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ Then you add an API key to the project, then switch on the "Web Fonts Developer 
 
 *However*, this plugin has a fallback list of fonts, so you can try it out without an API key, and that might even be
 good enough for your purposes. So you don't need to get technical to get started.
+
+In addition, you can select the weights that will be downloaded. If you only use light/regular/bold (300/400/700) then
+there is no point requesting all the additional weights from some of the fonts that are more complete, but
+consequently are a very heavy download. This plugin will help to keep the bandwidth down, and so the load speed higher.
 
 This plugin has been tested against PHP5.3 and the project repository is here:
 
@@ -130,6 +134,10 @@ https://github.com/academe/GoogleFontMetadata
 2. 
 
 == Changelog ==
+
+= Version 1.4.1 =
+* Filter out weights that have not been selected in the admin page, to reduce bandwidth.
+* Display additional error details when the API cannot be accessed.
 
 = Version 1.3.4 =
 * Updated URL and instructions for the Google webfonts console (to get an API key).
