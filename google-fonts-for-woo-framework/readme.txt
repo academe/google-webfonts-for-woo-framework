@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 3.8.0
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -134,6 +134,9 @@ https://github.com/academe/GoogleFontMetadata
 2. 
 
 == Changelog ==
+
+= Version 1.4.2 =
+* Some more informative error messages when not using WooThemes or not having an API key.
 
 = Version 1.4.1 =
 * Filter out weights that have not been selected in the admin page, to reduce bandwidth.

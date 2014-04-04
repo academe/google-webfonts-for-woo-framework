@@ -135,8 +135,11 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
             // Display the admin notive inline.
             $this->displayAdminNotice(
-                __('Cannot access Google Webfonts.'
-                . ' Check your API key. Using fallback font list instead.')
+                __(
+                    'Cannot access the Google Webfonts API.'
+                    . ' Check your API key.'
+                    . ' The fallback font list is being used instead.'
+                )
             );
 
             // Display additional diagnostics if available.
@@ -399,7 +402,10 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         $used_fonts = $this->fontsUsedInTheme();
 
         if (empty($this->old_woo_google_fonts)) {
-            _e('No framework fonts found');
+            _e(
+                'No framework fonts found. '
+                . 'You must use a theme from WooThemes for this plugin in work.'
+            );
         } else {
             echo '<select name="' . self::settings_field_old_fonts . '" multiple="multiple" size="10" class="' . self::settings_field_select_class . ' old-fonts">';
 
@@ -569,18 +575,21 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      */
 
     public function fontSubsetValidate($input) {
-        // Make sure submitted values are in the allowable list, then convert them into a string.
-
-        $all_font_subsets = $this->all_font_subsets;
+        // The very first time we come here, $input will be a string and not an array.
+        // I have no idea why, but let's catch it to suppress error messages.
+        if (is_string($input)) $input = array($input);
 
         if (is_array($input)) {
+            // Make sure submitted values are in the allowable list, then convert them into a string.
+            $all_font_subsets = $this->all_font_subsets;
+
             foreach($input as $key => $value) {
                 if (!isset($all_font_subsets[$key])) unset($input[$key]);
             }
             $input = implode(',', array_keys($input));
             if (empty($input)) $input = 'latin';
         } else {
-            add_settings_error(self::settings_field_font_subset, 'texterror', __('Invalid selection made'), 'error');
+            add_settings_error(self::settings_field_font_subset, 'texterror', __('Invalid subset selection made' . print_r($input, true)), 'error');
         }
 
         return $input;
@@ -591,18 +600,21 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      */
 
     public function fontWeightValidate($input) {
-        // Make sure submitted values are in the allowable list, then convert them into a string.
-
-        $all_font_weights = $this->all_font_weights;
+        // The very first time we come here, $input will be a string and not an array.
+        // I have no idea why, but let's catch it to suppress error messages.
+        if (is_string($input)) $input = array($input);
 
         if (is_array($input)) {
+            // Make sure submitted values are in the allowable list, then convert them into a string.
+            $all_font_weights = $this->all_font_weights;
+
             foreach($input as $key => $value) {
                 if (!isset($all_font_weights[$key])) unset($input[$key]);
             }
             $input = implode(',', array_keys($input));
-            if (empty($input)) $input = 'latin';
+            if (empty($input)) $input = '300,400,700';
         } else {
-            add_settings_error(self::settings_field_font_weight, 'texterror', __('Invalid selection made'), 'error');
+            add_settings_error(self::settings_field_font_weight, 'texterror', __('Invalid weight selection made'), 'error');
         }
 
         return $input;
