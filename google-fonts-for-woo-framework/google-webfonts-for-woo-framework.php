@@ -6,7 +6,7 @@
 Plugin Name: Google Webfonts For Woo Framework
 Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
 Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
-Version: 1.4.2
+Version: 1.4.3
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -100,6 +100,8 @@ if ( ! function_exists( 'woo_google_webfonts' ) && (true || $GWFC_OBJ->font_subs
                 if ( is_array($option) && isset($option['face']) ) $fonts_used[$option['face']] = $option['face'];
             }
 
+            $family = array();
+
             foreach ($google_fonts as $font) {
                 if (isset($fonts_used[$font['name']])) {
                     // Filter each list of variants to just the subset that has been selected.
@@ -109,20 +111,21 @@ if ( ! function_exists( 'woo_google_webfonts' ) && (true || $GWFC_OBJ->font_subs
                     // If there are no variants for this font, then skip it completely.
                     if (empty($variants)) continue;
 
-                    $fonts .= $font['name'] . ':' . implode(',', $variants) . "|";
+                    $family[] = $font['name'] . ':' . implode(',', $variants);
                 }
             }
 
-            // Output google font css in header
-            if ( $fonts ) {
-                $fonts = str_replace( " ", "+", $fonts );
+            // Output google font css in header.
+            if ( !empty($family) ) {
                 $output .= "\n<!-- Google Webfonts (for subsets: $GWFC_OBJ->font_subsets and weights: " .implode(',', $selected_font_weights). ") -->\n";
-                $output .= '<link href="http'
-                    . ( is_ssl() ? 's' : '' )
+
+                $url = 'http' . ( is_ssl() ? 's' : '' )
                     .'://fonts.googleapis.com/css?family='
-                    . trim($fonts, '|')
-                    . '&amp;subset=' . $GWFC_OBJ->font_subsets
-                    . '" rel="stylesheet" type="text/css" />'
+                    . urlencode(implode('|', $family))
+                    . '&subset=' . $GWFC_OBJ->font_subsets;
+
+                $output .= '<link href="' . esc_html($url) . '"'
+                    . ' rel="stylesheet" type="text/css" />'
                     . "\n";
 
                 echo $output;
