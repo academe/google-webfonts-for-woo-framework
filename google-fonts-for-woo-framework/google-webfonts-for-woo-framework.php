@@ -122,7 +122,7 @@ if ( ! function_exists( 'woo_google_webfonts' ) && (true || $GWFC_OBJ->font_subs
                 $url = 'http' . ( is_ssl() ? 's' : '' )
                     .'://fonts.googleapis.com/css?family='
                     . urlencode(implode('|', $family))
-                    . '&subset=' . $GWFC_OBJ->font_subsets;
+                    . '&subset=' . urlencode($GWFC_OBJ->font_subsets);
 
                 $output .= '<link href="' . esc_html($url) . '"'
                     . ' rel="stylesheet" type="text/css" />'
