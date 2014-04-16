@@ -139,7 +139,7 @@ light/normal/bold (also known as 300, 400 and 700). Each of these weights adds t
 and that can be excessive for some fonts, especially for users on slow or expensive connections.
 
 By filtering the weigths - by default just asking for 300/400/700 - the fonts downloaded from Google can
-be much smaller. WooThemes themes only support these three weigths in the theme administration pages, so
+be much smaller. WooThemes themes only support these three weights in the theme administration pages, so
 this is why we only request these three by default. If you have extended the theme and require additional
 weights, then select the weights that you would like included in the settings page. Those weights will
 then be requested for all all fonts used from Google, but only where Google offers those weights.
