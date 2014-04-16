@@ -3,8 +3,8 @@ Contributors: judgej
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B4STZL8F5WHK6
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
-Tested up to: 3.8.3
-Stable tag: 1.4.3
+Tested up to: 3.9
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -154,6 +154,9 @@ enhancement; don't download what is not needed.
 2. 
 
 == Changelog ==
+
+= Version 1.4.4 =
+* Tested against WP3.9 and Woo Framework 5.5.5
 
 = Version 1.4.3 =
 * Ticket #23 escape pipes/bars (|) in Google URL. Thanks github.com/rollbackfp

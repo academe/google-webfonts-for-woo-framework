@@ -36,7 +36,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         '100' => 'Ultra-light (Google: Thin)',
         '200' => 'Light (Google: Extra-Light)',
         '300' => 'Thin (Google: Light)',
-        '400' => 'Normal/Regular',
+        '400' => 'Regular/Normal',
         '500' => 'Medium',
         '600' => 'Semi-Bold',
         '700' => 'Bold',
