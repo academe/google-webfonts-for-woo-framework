@@ -3,8 +3,8 @@ Contributors: judgej
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B4STZL8F5WHK6
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
-Tested up to: 3.9
-Stable tag: 1.4.4
+Tested up to: 3.9.1
+Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,7 +138,7 @@ supports. Those weights may include ultra-bold, ultra-light, semi-bold and so on
 light/normal/bold (also known as 300, 400 and 700). Each of these weights adds to the download payload
 and that can be excessive for some fonts, especially for users on slow or expensive connections.
 
-By filtering the weigths - by default just asking for 300/400/700 - the fonts downloaded from Google can
+By filtering the weights - by default just asking for 300/400/700 - the fonts downloaded from Google can
 be much smaller. WooThemes themes only support these three weights in the theme administration pages, so
 this is why we only request these three by default. If you have extended the theme and require additional
 weights, then select the weights that you would like included in the settings page. Those weights will
@@ -154,6 +154,9 @@ enhancement; don't download what is not needed.
 2. 
 
 == Changelog ==
+
+= Version 1.4.5 =
+* New fallback font families (663): "Ek Mukta", "Fira Mono", "Fira Sans", "Rubik Mono One", "Rubik One", "Source Serif Pro"
 
 = Version 1.4.4 =
 * Tested against WP3.9 and Woo Framework 5.5.5
