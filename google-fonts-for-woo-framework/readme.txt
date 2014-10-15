@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 4.0.0
-Stable tag: 1.4.6
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,21 +18,19 @@ and any other themes that use the WooThemes framework. It also allows additional
 
 It works like this:
 
-1. You register for a Google API key, and make sure it is enabled for web fonts. Set the API key in the plugin settings menu.
-2. The key is used to download the full list of Google web fonts. This is cached locally, and will only be refreshed when you save the plugin settings page.
+1. You install the plugin. It contains a key that is used to access the Google Webfonts API.
+2. The API is used to download the full list of Google web fonts in the Settings page. This is cached locally, and will only be refreshed when you save the plugin settings page.
 3. The full list of fonts and all variants replaces the list that the Woo framework defines internally.
 
-What you should then see, is the ability to select any available Google web font in the WooThemes theme administration pages, and have those fonts displayed in your theme.
+What you should then see, is the ability to select any available Google web font in the WooThemes theme administration pages,
+and have those fonts displayed in your theme.
 
-To get the absolute latest fonts from Google, register for a Google API key, and turn on the "webfonts" API for that key here:
+In previous versions, you had to register for a Google API key. You no longer have to do this, as the plugin
+has a shared API key built-in. You can still use your own, but if you don't, then the shared key will be
+set when activating the plugin.
 
-[https://cloud.google.com/console](https://cloud.google.com/console)
-
-You first create a project (call it "Fonts API" or something like that, so you remember what the project was for).
-Then you add an API key to the project, then switch on the "Web Fonts Developer API" service for that API.
-
-*However*, this plugin has a fallback list of fonts, so you can try it out without an API key, and that might even be
-good enough for your purposes. So you don't need to get technical to get started.
+If an invalid API key is used, this plugin has a fallback list of fonts, so you can try it out without an API key,
+and that might even be good enough for your purposes.
 
 In addition, you can select the weights that will be downloaded. If you only use light/regular/bold (300/400/700) then
 there is no point requesting all the additional weights from some of the fonts that are more complete, but
@@ -51,30 +49,14 @@ Please let me know how this plugin works for you, whether you like it, and how i
 
 1. Upload google-fonts-for-woo-framework/ to the `/wp-content/plugins/` directory or google-fonts-for-woo-framework.zip through the "Add Plugins" administration page.
 1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Add your Google API key to the settings page for the plugin.
+1. Your WooThemes theme will now offer the full list of Google Webfonts in its various dropdown lists of fonts.
 
 == Frequently asked questions ==
-
-= What if I don't have a Google API key? =
-
-No problem! From version 1.2.0 this plugin carries a list of fonts and variants as a fallback. If the API key is not
-entered or the API key is invalid, then the plugin will use the fallback list. This list initially contains 652 fonts
-but will slowly get out of date as Google extends its fonts. It will be refreshed on each new version of the plugin
-however.
-
-= Where do I get a Google API key? =
-
-A Google API key can be obtained here: https://cloud.google.com/console?redirected=true
 
 = How can I contribute to this plugin? =
 
 This plugin is managed on github here https://github.com/academe/google-webfonts-for-woo-framework
 Feel free to raise issues there and make pull requests, as well as in the normal way on wordpress.org
-
-= I have installed this plugin and my API key seems to be already set. How? =
-
-The option used to store your API key shares it name with several other popular Google Webfonts plugins.
-If you have used, or are using, those plugins too, then the API key setting will be shared. This is by design.
 
 = I see errors reported when fetching the new Google webfonts =
 
@@ -148,12 +130,20 @@ Selecting a weight, or not selecting it, will not change the weights your browse
 What it changes is the glyphs for the exact weights that are requested from Google. It is a performance
 enhancement; don't download what is not needed.
 
+= Help - I've messed up the API key and now it won't work =
+
+You can reset the key by blanking it out on the settings page. By deactivating and reactivating the plugin,
+the default shared key will be added back in.
+
 == Screenshots ==
 
 1. 
 2. 
 
 == Changelog ==
+
+= Version 1.5.0 =
+* Now defaults to shared browser API key. You can still use your own if you wish.
 
 = Version 1.4.6 =
 * New fallback font families (676): "Halant", "Hind", "Kalam", "Karma", "Khand", "Laila", "Rajdhani", "Rozha One", "Sarpanch", "Slabo 13px", "Slabo 27px", "Teko", "Vesper Libre"

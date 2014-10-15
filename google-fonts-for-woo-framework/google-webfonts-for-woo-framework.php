@@ -6,7 +6,7 @@
 Plugin Name: Google Webfonts For Woo Framework
 Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
 Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
-Version: 1.4.6
+Version: 1.5.0
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -30,17 +30,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 /**
  * Set default settings on installation.
- * CHECKME: can this be wrapped with is_admin()?
+ * We are now moving the key to a new option, so it is less likely to
+ * clash with other plugins. We are then providing a default key that
+ * everyone can use. The key has 100k uses each day, which should cover
+ * many millions of sites, unless they all go into the admin pages on
+ * on the same day.
  */
 
 function GoogleWebfontsForWooFramework_activation()
 {
     global $GWFC_OBJ;
 
-    // If no api key option exists, then create a blank one now.
-    $google_api_key = get_option('google_api_key');
-    if ($google_api_key === false) {
-        add_option('google_api_key', '', false, true);
+    // Get the Google API key.
+    $google_api_key = get_option('gwfc_google_api_key');
+
+    // If no api key option exists - either empty string or not set - then create one now.
+    if ($google_api_key === false || $google_api_key === '') {
+        // If one already exists under the old option name, then take that as the new value.
+        $google_api_key = get_option('google_api_key');
+
+        // If still no value, then give it the default browser key.
+        if ( ! $google_api_key) {
+            $google_api_key = 'AIzaSyA2HFVb-wF8PupiqpgNtAid-0hFcZxo28Y';
+        }
+
+        // Add or update the option.
+        if (add_option('gwfc_google_api_key', $google_api_key, false, 'no') === false) {
+            update_option('gwfc_google_api_key', $google_api_key);
+        }
     }
 
     // Safety measure - some users finding the object is not there.
@@ -72,7 +89,7 @@ $GWFC_OBJ->init();
 // 'latin'.
 // Since we are now always restricting the weights now, this alternative font loader is always run.
 
-if ( ! function_exists( 'woo_google_webfonts' ) && (true || $GWFC_OBJ->font_subsets != 'latin' || $GWFC_OBJ->font_weights != implode(',', $GWFC_OBJ->default_weights))) {
+if ( ! function_exists( 'woo_google_webfonts' )) {
     function woo_google_webfonts() {
         global $google_fonts;
         global $GWFC_OBJ;

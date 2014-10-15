@@ -19,7 +19,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
     const settings_field_api_key = 'googleApiKey';
     const settings_field_font_subset = 'fontSubset';
     const settings_field_font_weight = 'fontWeight';
-    const settings_option_api_key = 'google_api_key';
+    const settings_option_api_key = 'gwfc_google_api_key';
     const settings_option_font_subset = 'gwfc_google_webfont_subset';
     const settings_option_font_weight = 'gwfc_google_webfont_weight';
     const settings_field_new_fonts = 'newFonts';
@@ -675,7 +675,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     public function getGoogleFontData()
     {
-        $google_api_key = get_option('google_api_key', '');
+        $google_api_key = get_option('gwfc_google_api_key', '');
         $font_list = false;
 
         // If not API key is set yet, then abort.
