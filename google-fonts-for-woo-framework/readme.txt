@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
 Tested up to: 4.0.0
-Stable tag: 1.5.0
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,9 @@ the default shared key will be added back in.
 2. 
 
 == Changelog ==
+
+= Version 1.5.2 =
+* Update the API key on plugin update (the activation hook is no longer run, which I kind of missed).
 
 = Version 1.5.0 =
 * Now defaults to shared browser API key. You can still use your own if you wish.

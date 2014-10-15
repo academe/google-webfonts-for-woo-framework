@@ -6,7 +6,7 @@
 Plugin Name: Google Webfonts For Woo Framework
 Plugin URI: https://github.com/academe/google-webfonts-for-woo-framework
 Description: Adds all missing Google webfonts to the WooThemes themes that use the Woo Framework.
-Version: 1.5.0
+Version: 1.5.2
 Author: Jason Judge
 Author URI: http://www.academe.co.uk/
 License: GPLv2 or later
@@ -71,6 +71,20 @@ function GoogleWebfontsForWooFramework_activation()
     if (!empty($fonts)) set_transient($GWFC_OBJ->trans_cache_name, $fonts);
 }
 register_activation_hook(__FILE__, 'GoogleWebfontsForWooFramework_activation');
+
+// Also check for a plugin upgrade, and run the same activation code.
+// This feels really messy, and throws too much crap into the global space,
+// but there are no official recommended ways of handling upgrades on a plugin
+// update.
+function GoogleWebfontsForWooFramework_loaded()
+{
+    $version = '1.5.2';
+    if (get_option( 'gwfc_plugin_version' ) != $version) {
+        GoogleWebfontsForWooFramework_activation();
+        update_option( 'gwfc_plugin_version', $version );
+    }
+}
+add_action( 'plugins_loaded', 'GoogleWebfontsForWooFramework_loaded' );
 
 // Set the main plugin as a global object.
 // There is a standard visitor version and an extended admin version.
