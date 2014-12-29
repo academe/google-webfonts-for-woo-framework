@@ -3,8 +3,8 @@ Contributors: judgej
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B4STZL8F5WHK6
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
-Tested up to: 4.0.0
-Stable tag: 1.5.2
+Tested up to: 4.1.0
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,11 @@ the default shared key will be added back in.
 2. 
 
 == Changelog ==
+
+= Version 1.6.0 =
+* git issue #29: Set the default API key if saved blanked out.
+* git issue #27: Use the new fonts filter for Woo Framework 6.0+ see https://wordpress.org/support/topic/some-fonts-not-displaying-ex-source-serif-pro
+* New fallback font families (682): Dhurjati, Gidugu, Mallanna, Mandali, NTR, Ramabhadra
 
 = Version 1.5.2 =
 * Update the API key on plugin update (the activation hook is no longer run, which I kind of missed).
