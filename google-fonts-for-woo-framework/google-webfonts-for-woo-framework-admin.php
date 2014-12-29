@@ -560,8 +560,18 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         if ($input != rawurlencode($input)) {
             add_settings_error(self::settings_field_api_key, 'texterror', __('API key contains invalid characters'), 'error');
         } else {
-            // If valid, then replace the current cache with new Google fonts.
-            $fonts = $this->getGoogleFonts();
+            // If emtpy, then use the default API key.
+
+            if (empty($input)) {
+                $input = $this->google_api_key;
+            }
+
+            // If valid (we hope), then replace the current cache with new Google fonts.
+            // This seems wrong here, because we have not stored the API key at this point.
+            // We'll pass the API key in and do the fetch anyway, but I suspect the fetch is
+            // being done again anyway.
+
+            $fonts = $this->getGoogleFonts($input);
             if ( ! empty($fonts)) {
                 set_transient($this->trans_cache_name, $fonts);
             }
@@ -673,9 +683,9 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      * actually used to generate the content of fonts.json
      */
 
-    public function getGoogleFontData()
+    public function getGoogleFontData($google_api_key = null)
     {
-        $google_api_key = get_option('gwfc_google_api_key', '');
+        if (empty($google_api_key)) $google_api_key = get_option('gwfc_google_api_key', '');
         $font_list = false;
 
         // If not API key is set yet, then abort.
@@ -762,10 +772,10 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
      * For example, Ultrabold (900) is not available in Canvas, so there is no point loading it.
      */
 
-    public function getGoogleFonts()
+    public function getGoogleFonts($google_api_key = null)
     {
         // Get the font data from Google.
-        $font_list = $this->getGoogleFontData();
+        $font_list = $this->getGoogleFontData($google_api_key = null);
 
         if (empty($font_list)) return $font_list;
 
