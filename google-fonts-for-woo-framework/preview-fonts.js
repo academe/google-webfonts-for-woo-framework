@@ -6,13 +6,16 @@ jQuery.fn.gwfwFontPreview = (function(options) {
         font_selector_class: 'font-selector',
         preview_text: {
             // See http://stackoverflow.com/questions/18931489/google-webfont-subset-sample-strings
+            // This list will be extended as Google releases more subsets for preview.
             'latin': 'Grumpy wizards make toxic brew for the evil Queen and Jack',
             'latin-ext': 'ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘ...',
             'greek': 'Τάχιστη αλώπηξ βαφής ψημένη γη, δρασκελίζει υπέρ νωθρού κυνός',
             'greek-ext': 'ἀἁἂἃἄἅἆἇἈἉἊἋἌἍἎἏἑἒἓἔἕἘἙἚἛἜἝἠἡἢἣἤἥἦἧ',
             'cyrillic': 'В чащах юга жил бы цитрус? Да, но фальшивый экземпляр!',
             'cyrillic-ext': 'ꙢꙣꙤꙥꙦꙧꙨꙩꙪꙫꙬꙭꙮ',
+            'devanagari': 'एक पल का क्रोध आपका भविष्य बिगाड सकता है',
             'khmer': 'ខ្ញុំអាចញ៉ាំកញ្ចក់បាន ដោយគ្មានបញ្ហា',
+            'telugu': 'దేశ భాషలందు తెలుగు లెస్స',
             'vietnamese': 'Tôi có thể ăn thủy tinh mà không hại gì.'
         },
         google_base_url: 'http://fonts.googleapis.com/css?family=',

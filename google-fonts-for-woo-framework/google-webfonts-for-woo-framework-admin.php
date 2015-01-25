@@ -46,23 +46,25 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     // The list of subsets that are (or will be) available from Google.
     public $all_font_subsets = array(
-        'latin' => 'Latin',
-        'latin-ext' => 'Latin Extended',
-        'greek' => 'Greek',
-        'greek-ext' => 'Greek Extended',
-        'cyrillic' => 'Cyrillic',
-        'cyrillic-ext' => 'Cyrillic Extended',
+        'latin' => '* Latin',
+        'latin-ext' => '* Latin Extended',
+        'greek' => '* Greek',
+        'greek-ext' => '* Greek Extended',
+        'cyrillic' => '* Cyrillic',
+        'cyrillic-ext' => '* Cyrillic Extended',
 
         //'menu' => 'Menu',
 
         'arabic' => 'Arabic',
         'bengali' => 'Bengali',
+        'devanagari' => '* Devanagari', // e.g. Noto Sans
         'hindi' => 'Hindi',
-        'khmer' => 'Khmer',
+        'khmer' => '* Khmer', // e.g. Suwannaphum
         'korean' => 'Korean',
         'lao' => 'Lao',
         'tamil' => 'Tamil',
-        'vietnamese' => 'Vietnamese',
+        'telugu' => '* Telugu', // e.g. Mallanna
+        'vietnamese' => '* Vietnamese',
     );
 
     public function init()
@@ -298,11 +300,15 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         $options = explode(',', $option);
 
         foreach($this->all_font_subsets as $value => $label) {
-            echo "<label for='" . self::settings_option_font_subset . "_$value'>";
+            $bold_style = (substr($label, 0, 1) == '*' ? ' font-weight: bold;' : '');
+
+            echo "<label for='" . self::settings_option_font_subset . "_$value' style='white-space: nowrap; {$bold_style}'>";
             $checked = (in_array($value, $options) ? "checked='checked'" : '');
             echo "<input class='gwfc_google_webfont_subset_select' type='checkbox' id='" . self::settings_option_font_subset . "_$value' name='" . self::settings_option_font_subset . "[$value]' value='$value' $checked />";
             echo "$label</label>&nbsp; ";
         }
+
+        echo "<p>" . _('Previews are available only for subsets marked "*".') . "</p>";
     }
 
     /**
@@ -318,7 +324,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
             // Highlight the three default weights.
             if (in_array($value, $this->default_weights)) echo "<strong><em>";
 
-            echo "<label for='" . self::settings_option_font_weight . "_$value'>";
+            echo "<label for='" . self::settings_option_font_weight . "_$value' style='white-space: nowrap;'>";
 
             $checked = (in_array($value, $options) ? "checked='checked'" : '');
 
@@ -331,6 +337,8 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
             if (in_array($value, $this->default_weights)) echo "</em></strong>";
         }
+
+        echo "<p>" . _('The Woo Framework font chooser GUI supports weights 300, 400 and 700 only at present.') . "</p>";
     }
 
     /**
