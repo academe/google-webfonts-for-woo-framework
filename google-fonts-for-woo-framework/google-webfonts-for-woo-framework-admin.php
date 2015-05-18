@@ -46,25 +46,26 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
 
     // The list of subsets that are (or will be) available from Google.
     public $all_font_subsets = array(
-        'latin' => '* Latin',
-        'latin-ext' => '* Latin Extended',
-        'greek' => '* Greek',
-        'greek-ext' => '* Greek Extended',
-        'cyrillic' => '* Cyrillic',
-        'cyrillic-ext' => '* Cyrillic Extended',
+        'latin'         => '* Latin',
+        'latin-ext'     => '* Latin Extended',
+        'greek'         => '* Greek',
+        'greek-ext'     => '* Greek Extended',
+        'cyrillic'      => '* Cyrillic',
+        'cyrillic-ext'  => '* Cyrillic Extended',
 
         //'menu' => 'Menu',
 
-        'arabic' => 'Arabic',
-        'bengali' => 'Bengali',
-        'devanagari' => '* Devanagari', // e.g. Noto Sans
-        'hindi' => 'Hindi',
-        'khmer' => '* Khmer', // e.g. Suwannaphum
-        'korean' => 'Korean',
-        'lao' => 'Lao',
-        'tamil' => 'Tamil',
-        'telugu' => '* Telugu', // e.g. Mallanna
-        'vietnamese' => '* Vietnamese',
+        'arabic'        => '* Arabic',      // e.g. Lateef
+        'bengali'       => 'Bengali',
+        'devanagari'    => '* Devanagari',  // e.g. Noto Sans
+        'hebrew'        => '* Hebrew',      // e.g. Tinos
+        'hindi'         => 'Hindi',
+        'khmer'         => '* Khmer',       // e.g. Suwannaphum
+        'korean'        => 'Korean',
+        'lao'           => 'Lao',
+        'tamil'         => 'Tamil',
+        'telugu'        => '* Telugu',      // e.g. Mallanna
+        'vietnamese'    => '* Vietnamese',
     );
 
     public function init()
