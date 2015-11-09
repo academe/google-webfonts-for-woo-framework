@@ -56,15 +56,17 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         //'menu' => 'Menu',
 
         'arabic'        => '* Arabic',      // e.g. Lateef
-        'bengali'       => 'Bengali',
+        'bengali'       => '* Bengali',     // e.g. Hind Siliguri
         'devanagari'    => '* Devanagari',  // e.g. Noto Sans
+        'devanagari'    => '* Gujarati',    // e.g. Hind Vadodara
         'hebrew'        => '* Hebrew',      // e.g. Tinos
         'hindi'         => 'Hindi',
         'khmer'         => '* Khmer',       // e.g. Suwannaphum
         'korean'        => 'Korean',
         'lao'           => 'Lao',
-        'tamil'         => 'Tamil',
+        'tamil'         => '* Tamil',       // e.g. Catamaran
         'telugu'        => '* Telugu',      // e.g. Mallanna
+        'thai'          => '* Thai',        // e.g. Chonburi
         'vietnamese'    => '* Vietnamese',
     );
 

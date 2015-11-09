@@ -142,6 +142,10 @@ the default shared key will be added back in.
 
 == Changelog ==
 
+= Version 1.6.3 =
+* Added previews for Bengali, Gujarati, Tamil and Thai.
+* Additional fallback font families. 732 font families supported.
+
 = Version 1.6.2 =
 * Added previews for Arabic and Hebrew
 * Additional fallback font families. 709 font families supported.
