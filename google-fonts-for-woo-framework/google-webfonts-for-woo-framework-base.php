@@ -28,7 +28,7 @@ class GoogleWebfontsForWooFramework
     public $default_weights = array('300', '400', '700');
 
     // The default API key to use.
-    public $google_api_key = 'AIzaSyA2HFVb-wF8PupiqpgNtAid-0hFcZxo28Y';
+    public $google_api_key = 'AIzaSyBp6g_JkgcrQdHS9Id4mZL3oIPxFMXAdNI';
 
     // Initilialise the plugin.
     public function init() {

@@ -40,17 +40,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 function GoogleWebfontsForWooFramework_activation()
 {
     global $GWFC_OBJ;
+    $old_api_key = 'AIzaSyA2HFVb-wF8PupiqpgNtAid-0hFcZxo28Y';
 
     // Get the Google API key.
     $google_api_key = get_option('gwfc_google_api_key');
 
     // If no api key option exists - either empty string or not set or the old API key - then create one now.
-    if ($google_api_key === false || $google_api_key === '') {
+    if ($google_api_key === false || $google_api_key === '' || $google_api_key === $old_api_key) {
         // If one already exists under the old option name, then take that as the new value.
         $google_api_key = get_option('google_api_key');
 
         // If the key is the old key, prior to v1.6.4, then clear it so it can be replaced.
-        if ($google_api_key == 'AIzaSyA2HFVb-wF8PupiqpgNtAid-0hFcZxo28Y') {
+        if ($google_api_key == $old_api_key) {
             $google_api_key = false;
         }
 

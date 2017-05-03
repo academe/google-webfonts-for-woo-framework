@@ -818,4 +818,3 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         return $fonts;
     }
 }
-
