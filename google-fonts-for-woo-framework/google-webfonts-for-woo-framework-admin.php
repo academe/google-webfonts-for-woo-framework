@@ -209,7 +209,7 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         // The API key.
         add_settings_field(
             self::settings_field_api_key,
-            __('Google Developer API Key'),
+            __('Google API Key'),
             array($this, self::settings_field_api_key . 'Field'),
             self::settings_page,
             self::settings_section_id // section
@@ -302,14 +302,21 @@ class GoogleWebfontsForWooFrameworkAdmin extends GoogleWebfontsForWooFramework
         $option = get_option(self::settings_option_font_subset, 'latin');
         $options = explode(',', $option);
 
+        echo "<div>";
         foreach($this->all_font_subsets as $value => $label) {
             $bold_style = (substr($label, 0, 1) == '*' ? ' font-weight: bold;' : '');
+
+            // Break at the Western/ROW division.
+            if ($value == 'arabic') {
+                echo "</div><div>";
+            }
 
             echo "<label for='" . self::settings_option_font_subset . "_$value' style='white-space: nowrap; {$bold_style}'>";
             $checked = (in_array($value, $options) ? "checked='checked'" : '');
             echo "<input class='gwfc_google_webfont_subset_select' type='checkbox' id='" . self::settings_option_font_subset . "_$value' name='" . self::settings_option_font_subset . "[$value]' value='$value' $checked />";
             echo "$label</label>&nbsp; ";
         }
+        echo "</div>";
 
         echo "<p>" . _('Previews are available only for subsets marked "*".') . "</p>";
     }

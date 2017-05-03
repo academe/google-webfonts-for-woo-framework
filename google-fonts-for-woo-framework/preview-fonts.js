@@ -26,7 +26,7 @@ jQuery.fn.gwfwFontPreview = (function(options) {
 			'telugu': 'దేశ భాషలందు తెలుగు లెస్స',
 			'vietnamese': 'Tôi có thể ăn thủy tinh mà không hại gì.'
 		},
-		google_base_url: 'http://fonts.googleapis.com/css?family=',
+		google_base_url: 'https://fonts.googleapis.com/css?family=',
 		subset_field_class: 'gwfc_google_webfont_subset_select'
 	}, options);
 

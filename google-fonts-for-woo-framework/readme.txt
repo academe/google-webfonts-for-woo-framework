@@ -3,8 +3,8 @@ Contributors: judgej
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=B4STZL8F5WHK6
 Tags: woothemes, google webfonts, typography, fonts, woo framework
 Requires at least: 3.3
-Tested up to: 4.2.2
-Stable tag: 1.6.3
+Tested up to: 4.7.4
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,12 @@ the default shared key will be added back in.
 2. 
 
 == Changelog ==
+
+= Version 1.6.4 =
+* Fix broken preview on SSL site.
+* Added new fall-back fonts. 818 font families supported.
+* Tested to WP 4.7.4 Woo framework 6.2.8 and Woo Canvas 5.11.4
+* Switched to a new API key under a new Google project.
 
 = Version 1.6.3 =
 * Added previews for Bengali, Gujarati, Tamil and Thai.
